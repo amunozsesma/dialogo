@@ -1,0 +1,35 @@
+.video-room-container {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+    min-height: 640px;
+    padding: 20px;
+}
+
+.video-container {
+	display: flex;
+    border: 10px solid;
+    border: 10px solid #d3d3d3;
+	box-sizing: border-box;
+}
+
+.video-container:before{
+    content: "";
+    display: block;
+    padding-top: 75%;
+}
+
+.video-element {
+    height: 100%;
+    width: 100%;
+
+}
+
+.video-element.isHidden {
+    display: none;
+}
+
+.video-room-footer {
+    display: flex;
+    flex-direction: row-reverse;
+}

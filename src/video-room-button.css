@@ -1,0 +1,17 @@
+.video-room-button {
+    text-transform: uppercase;
+    background-color: #d3d3d3;
+    color: white;
+    font-weight: bold;
+    width: 120px;
+    height: 50px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.video-room-button:hover {
+    cursor: pointer;
+}
