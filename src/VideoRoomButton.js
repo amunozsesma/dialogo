@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Constants from './Constants';
 import Labels from './Labels';
+import classNames from 'classnames';
 
 import './video-room-button.css'
 
@@ -10,9 +11,15 @@ export default class VideoRoomButton extends Component {
 	}
 
 	render() {
+		const roomState = this.props.data.roomState;
+
+		const buttonClassNames = classNames('video-room-button', {
+			disabled: roomState !== Constants.ROOM_STATE_INACTIVE
+		});
+
 		return (
-			<div className="video-room-button" onClick={this.onButtonClicked.bind(this)}>
-				{getLabel(this.props.data.roomState)}
+			<div className={buttonClassNames} onClick={this.onButtonClicked.bind(this)}>
+				{getLabel(roomState)}
 			</div>
 		);
 	}

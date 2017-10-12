@@ -6,7 +6,6 @@ const PLAYING_REMOTE = 'playing-remote';
 const PLAYING_LOCAL = 'playing-local';
 const NOT_PLAYING = 'not-playing';
 
-// TODO rename to video managaer or smthing
 export default class WebRTCService extends Emitr {
 	constructor() {
 		super();

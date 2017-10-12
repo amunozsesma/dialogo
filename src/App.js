@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SimpleWebRTC from 'simplewebrtc';
 import VideoRoom from './VideoRoom';
 import Constants from './Constants';
-import WebRTCService from './WebRTCService';
+import VideoStreamAdapter from './VideoStreamAdapter';
 import './app.css';
 
 export default class App extends Component {
@@ -10,7 +10,7 @@ export default class App extends Component {
 		super();
 
 		this.registeredRemoteVideoElements = [];
-		this.webRTCService = new WebRTCService();
+		this.videoStreamAdapter = new VideoStreamAdapter();
 
 		this.state = {
 			left: this.createSide('left'),
@@ -18,20 +18,22 @@ export default class App extends Component {
 		}
 	}
 
-	onReadyToGetVideo(remoteVideoEl) {
-		this.registeredRemoteVideoElements.push(remoteVideoEl);
-		if (this.registeredRemoteVideoElements.length === 2) {
-			this.webRTCService.init(this.registeredRemoteVideoElements);
-		}
+	componentDidMount() {
+		this.videoStreamAdapter.init();
 	}
 
 	onButtonClicked(side) {
-		this.modifySide(side, {
-			roomState: Constants.ROOM_STATE_ACTIVE
-		});
+		if (this.state[side].roomState === Constants.ROOM_STATE_INACTIVE) {
+			this.modifyStateForSide(side, {
+				roomState: Constants.ROOM_STATE_ACTIVE
+			});
+
+			this.videoStreamAdapter.startConversation(side);
+		}
+
 	}	
 
-	modifySide(side, newState) {
+	modifyStateForSide(side, newState) {
 		let newSideState = {};
 		newSideState[side] = Object.assign({}, this.state[side], newState);
 		this.setState(Object.assign(this.state, newSideState));
@@ -39,20 +41,18 @@ export default class App extends Component {
 
 	createSide(side) {
 		const buttonClicked = this.onButtonClicked.bind(this);
-		const onReadyToGetVideo = this.onReadyToGetVideo.bind(this);
 		return {
 			roomState: Constants.ROOM_STATE_INACTIVE,
 			side: side,
-			onButtonClicked: buttonClicked,
-			onReadyToGetVideo: onReadyToGetVideo
+			onButtonClicked: buttonClicked
 		}
 	}
 
 	render() {
 		return (
 			<div className="app-container">
-				<VideoRoom data={this.state.left} webrtc={this.webRTCService} />
-				<VideoRoom data={this.state.right} webrtc={this.webRTCService} />
+				<VideoRoom data={this.state.left} videoadapter={this.videoStreamAdapter} />
+				<VideoRoom data={this.state.right} videoadapter={this.videoStreamAdapter} />
 			</div>
 		);
 	}
