@@ -3,7 +3,7 @@ import SimpleWebRTC from 'simplewebrtc';
 import VideoRoom from './VideoRoom';
 import Constants from './Constants';
 import VideoStreamAdapter from './VideoStreamAdapter';
-import './app.css';
+import './app.less';
 
 export default class App extends Component {
 	constructor() {

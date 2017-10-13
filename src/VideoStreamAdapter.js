@@ -3,7 +3,7 @@ import Constants from './Constants';
 import SimpleWebRTC from 'simplewebrtc';
 import AppConfig from './AppConfig';
 
-import './video-stream-adapter.css'
+import './video-stream-adapter.less'
 
 export default class VideoStreamAdapter extends Emitr {
 	init() {

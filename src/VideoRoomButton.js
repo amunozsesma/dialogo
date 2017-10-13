@@ -3,7 +3,7 @@ import Constants from './Constants';
 import Labels from './Labels';
 import classNames from 'classnames';
 
-import './video-room-button.css'
+import './video-room-button.less'
 
 export default class VideoRoomButton extends Component {
 	onButtonClicked() {

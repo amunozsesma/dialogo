@@ -1,6 +1,8 @@
+@import "common-styles";
+
 .video-room-button {
     text-transform: uppercase;
-    background-color: #b3b3b3;
+    background-color: @standard-app-color;
     color: white;
     font-weight: bold;
     width: 120px;
@@ -13,16 +15,16 @@
 }
 
 .video-room-button.disabled {
-    background-color: #d3d3d3;
+    background-color: @button-disabled-color;
     color: #e6e6e6;
 }
 
 .video-room-button:hover {
     cursor: pointer;
-    background-color: #808080;
+    background-color: @button-hover-color;
 }
 
 .video-room-button.disabled:hover {
     cursor: default;
-    background-color: #d3d3d3;
+    background-color: @button-disabled-color;
 }

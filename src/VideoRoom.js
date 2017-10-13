@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import VideoRoomButton from './VideoRoomButton';
-import './video-room.css'
+import './video-room.less'
 
 export default class VideoRoom extends Component {
 	constructor() {
