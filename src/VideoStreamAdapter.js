@@ -1,6 +1,7 @@
 import Emitr from './emitr';
 import Constants from './Constants';
 import SimpleWebRTC from 'simplewebrtc';
+import AppConfig from './AppConfig';
 
 import './video-stream-adapter.css'
 
@@ -23,7 +24,7 @@ export default class VideoStreamAdapter extends Emitr {
 			localVideoEl: this.localVideoContainer,
 			remoteVideosEl: this.remoteVideoContainer,
 			autoRequestMedia: true,
-			url: 'https://1dc104e1.ngrok.io',
+			url: AppConfig.SIGNALING_SERVER_URL,
 			debug: false,
 			media: {
 				audio: true,

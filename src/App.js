@@ -30,7 +30,6 @@ export default class App extends Component {
 
 			this.videoStreamAdapter.startConversation(side);
 		}
-
 	}	
 
 	modifyStateForSide(side, newState) {
