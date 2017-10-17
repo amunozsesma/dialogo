@@ -55,7 +55,7 @@ function Emitter() {
 	this._emitterMetaEventsOn = false;
 }
 
-Emitter.suppressErrors = true;
+Emitter.suppressErrors = false;
 
 Emitter.prototype = {
 	/**
