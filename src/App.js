@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import SimpleWebRTC from 'simplewebrtc';
-import VideoRoom from './VideoRoom';
+// import VideoRoom from './VideoRoom';
+import DiscussionContainer from './DiscussionContainer';
 import Constants from './Constants';
 import VideoStreamAdapter from './VideoStreamAdapter';
+import Labels from './Labels';
 import './app.less';
 
 export default class App extends Component {
@@ -43,6 +45,10 @@ export default class App extends Component {
 		return {
 			roomState: Constants.ROOM_STATE_INACTIVE,
 			side: side,
+			roomTitle: {
+				bold: Labels['Room_Title'][side].bold,
+				normal: Labels['Room_Title'][side].normal
+			},
 			onButtonClicked: buttonClicked
 		}
 	}
@@ -50,8 +56,13 @@ export default class App extends Component {
 	render() {
 		return (
 			<div className="app-container">
-				<VideoRoom data={this.state.left} videoadapter={this.videoStreamAdapter} />
-				<VideoRoom data={this.state.right} videoadapter={this.videoStreamAdapter} />
+				<div className="app-title">Diálogo a la fuerza</div>
+				<DiscussionContainer data={this.state} videoadapter={this.videoStreamAdapter} />
+				<div className="app-info-box app-info">{Labels['App_Info']}</div>
+				<div className="app-info-box app-terms">
+					<div className="app-terms-title">{Labels['App_Terms_Title']}</div>
+					<div className="app-terms-content">{Labels['App_Terms_Content']}</div>
+				</div>
 			</div>
 		);
 	}

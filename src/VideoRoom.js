@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import VideoRoomButton from './VideoRoomButton';
+import VideoRoomInfo from './VideoRoomInfo';
 import './video-room.less'
 
 export default class VideoRoom extends Component {
@@ -37,8 +38,12 @@ export default class VideoRoom extends Component {
 	render() {
 		return (
 			<div className="video-room-container">
+				<span className="video-room-title">
+					<b>{this.props.data.roomTitle.bold}</b>{this.props.data.roomTitle.normal}
+				</span>
 				<div ref={(videoContainer) => {this.videoContainer = videoContainer;}} className="video-container">
 				</div>
+				<VideoRoomInfo data={this.props.data} />
 				<div className="video-room-footer">
 					<VideoRoomButton data={this.props.data}/>
 				</div>
