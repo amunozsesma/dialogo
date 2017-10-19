@@ -34,21 +34,20 @@
     padding-top: 75%;
 }
 
-.video-element.isHidden {
-    display: none;
-}
-
 .video-room-footer {
     display: flex;
     flex-direction: row-reverse;
 }
 
-video {
-    opacity: 0;
-}
-
-video.video-element {
-    opacity: 1;
+.video-element {
     height: 100%;
     width: 100%;
+
+    &.left {
+        transform: scaleX(-1);
+    }
+
+    &.isHidden {
+        display: none;
+    }
 }

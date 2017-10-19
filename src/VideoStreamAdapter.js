@@ -8,6 +8,9 @@ export default class VideoStreamAdapter extends Emitr {
 	}
 
 	startConversation(side) {
+		this.webRTCHandler.startConversation(function(stream) {
+			this.trigger('addVideoStream', stream, side);
+		}.bind(this));
 	}
 
 	endConversation(side) {
