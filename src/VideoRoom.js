@@ -21,13 +21,20 @@ export default class VideoRoom extends Component {
 		this.props.videoadapter.off('removeVideoStream', this.onRemoveVideoStream);
 	}
 
-	addVideoStream(videoEl, side) {
+	addVideoStream(stream, side) {
 		if (side === this.props.data.side) {
+			var videoEl = document.createElement('video');
 			this.videoContainer.appendChild(videoEl);
 
 			if (videoEl.className.indexOf('video-element') === -1) {
-				videoEl.className += ' video-element';
+				videoEl.className += 'video-element ' + side;
 			}
+
+			videoEl.srcObject = stream;
+			videoEl.oncontextmenu = function (e) {
+				e.preventDefault();
+			};
+			videoEl.autoplay = 'autoplay';
 		}
 	}
 
