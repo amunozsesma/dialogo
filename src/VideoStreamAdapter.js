@@ -1,33 +1,36 @@
 import Emitr from './emitr';
-import WebRTCHandler from './WebRTCHandler';
+import AppConfig from './AppConfig';
+import MediaSoupClient from './MediasoupClient';
 
 export default class VideoStreamAdapter extends Emitr {
+	constructor() {
+		super();
+		this.webRTCClient = new AppConfig['WEBRTC_CLIENT_IMPLEMENTATION']({
+			mediaChanged: this.onMediaChanged.bind(this),
+			mediaError: logError,
+		});
+	}
+
 	init() {
-		this.webRTCHandler = new WebRTCHandler();
-		this.webRTCHandler.init();
+		this.webRTCClient.init();
 	}
 
 	startConversation(side) {
-		this.webRTCHandler.startConversation(function(stream) {
-			this.trigger('addVideoStream', stream, side);
-		}.bind(this));
+		this.webRTCClient.requestLocalMedia(side);
 	}
 
-	endConversation(side) {
+	onMediaChanged(side, message) {
+		switch (message.type) {
+			case 'addStream':
+				this.trigger('addVideoStream', message.payload, side);
+				break;
+			case 'removeStream':
+				this.trigger('removeVideoStream', side);
+				break
+		}
 	}
+}
 
-	addListeners() {
-	}
-
-	addVideo(videoEl) {
-	}
-
-	removeVideo(videoEl) {
-	}
-
-	getNextAvailableSide() {
-	}
-
-	whichSideIsVideoPlaying(videoEl) {
-	}
+function logError(err) {
+	console.log('Error in VideoStreamAdapter: ' + err);
 }
