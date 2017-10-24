@@ -1,0 +1,163 @@
+---NEW IMPLEMENTATION---
+
+
+FIRST PEER NO VIDEO (ANSWER 1)
+
+v=0\r
+o=- 4380743924915233149 3 IN IP4 127.0.0.1\r
+s=-\r
+t=0 0\r
+a=msid-semantic: WMS\r
+m=audio 0 RTP/SAVPF 0\r
+c=IN IP4 0.0.0.0\r
+a=rtcp:9 IN IP4 0.0.0.0\r
+a=mid:audio-tracks\r
+a=inactive\r
+a=rtpmap:0 PCMU/8000\r
+m=video 0 RTP/SAVPF 0\r
+c=IN IP4 0.0.0.0\r
+a=rtcp:9 IN IP4 0.0.0.0\r
+a=mid:video-tracks\r
+a=inactive\r
+
+SECOND PEER NO VIDEO (ANSWER 1)
+v=0\r
+o=- 8373961186417022440 3 IN IP4 127.0.0.1\r
+s=-\r
+t=0 0\r
+a=msid-semantic: WMS\r
+m=audio 0 RTP/SAVPF 0\r
+c=IN IP4 0.0.0.0\r
+a=rtcp:9 IN IP4 0.0.0.0\r
+a=mid:audio-tracks\r
+a=inactive\r
+a=rtpmap:0 PCMU/8000\r
+m=video 0 RTP/SAVPF 0\r
+c=IN IP4 0.0.0.0\r
+a=rtcp:9 IN IP4 0.0.0.0\r
+a=mid:video-tracks\r
+a=inactive\r
+
+FIRST PEER VIDEO (ANSWER 2)
+v=0\r
+o=- 685066722093475897 4 IN IP4 127.0.0.1\r
+s=-\r
+t=0 0\r
+a=msid-semantic: WMS jziqZAPCB8rV9l21BZR0f7fRAtSGS41jf1vZ\r
+m=audio 0 RTP/SAVPF 0\r
+c=IN IP4 0.0.0.0\r
+a=rtcp:9 IN IP4 0.0.0.0\r
+a=mid:audio-tracks\r
+a=inactive\r
+a=rtpmap:0 PCMU/8000\r
+a=ssrc:3777710703 cname:2gjqEMx8PFEOlfwi\r
+a=ssrc:3777710703 msid:jziqZAPCB8rV9l21BZR0f7fRAtSGS41jf1vZ e42d794f-12ee-4304-a459-3f0d6090eb3a\r
+a=ssrc:3777710703 mslabel:jziqZAPCB8rV9l21BZR0f7fRAtSGS41jf1vZ\r
+a=ssrc:3777710703 label:e42d794f-12ee-4304-a459-3f0d6090eb3a\r
+m=video 0 RTP/SAVPF 0\r
+c=IN IP4 0.0.0.0\r
+a=rtcp:9 IN IP4 0.0.0.0\r
+a=mid:video-tracks\r
+a=inactive\r
+a=ssrc:3389298755 cname:2gjqEMx8PFEOlfwi\r
+a=ssrc:3389298755 msid:jziqZAPCB8rV9l21BZR0f7fRAtSGS41jf1vZ d255745b-8739-4655-81fe-f7c839561bb1\r
+a=ssrc:3389298755 mslabel:jziqZAPCB8rV9l21BZR0f7fRAtSGS41jf1vZ\r
+a=ssrc:3389298755 label:d255745b-8739-4655-81fe-f7c839561bb1\r
+
+
+
+SECOND PEER VIDEO (ANSWER 2)
+v=0\r
+o=- 8373961186417022440 4 IN IP4 127.0.0.1\r
+s=-\r
+t=0 0\r
+a=msid-semantic: WMS 1R0CCHqw0MIec9f6KsHO3wiXiyKuQm838FUG\r
+m=audio 0 RTP/SAVPF 0\r
+c=IN IP4 0.0.0.0\r
+a=rtcp:9 IN IP4 0.0.0.0\r
+a=mid:audio-tracks\r
+a=inactive\r
+a=rtpmap:0 PCMU/8000\r
+a=ssrc:2967773567 cname:bDYbM+MdswlWVwtJ\r
+a=ssrc:2967773567 msid:1R0CCHqw0MIec9f6KsHO3wiXiyKuQm838FUG 7a624912-addc-4908-b469-53cf2673618c\r
+a=ssrc:2967773567 mslabel:1R0CCHqw0MIec9f6KsHO3wiXiyKuQm838FUG\r
+a=ssrc:2967773567 label:7a624912-addc-4908-b469-53cf2673618c\r
+m=video 0 RTP/SAVPF 0\r
+c=IN IP4 0.0.0.0\r
+a=rtcp:9 IN IP4 0.0.0.0\r
+a=mid:video-tracks\r
+a=inactive\r
+a=ssrc:3971166445 cname:bDYbM+MdswlWVwtJ\r
+a=ssrc:3971166445 msid:1R0CCHqw0MIec9f6KsHO3wiXiyKuQm838FUG 9f8a17bc-25ff-4092-9150-88e69ece7e9d\r
+a=ssrc:3971166445 mslabel:1R0CCHqw0MIec9f6KsHO3wiXiyKuQm838FUG\r
+a=ssrc:3971166445 label:9f8a17bc-25ff-4092-9150-88e69ece7e9d\r
+
+
+
+FIRST PEER OFFER
+"v=0
+o=mediasoup 21090139 1 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=ice-lite
+a=fingerprint:sha-256 45:C1:08:A3:59:66:B3:97:5C:A3:89:53:F9:9E:A4:1F:75:D0:9B:82:2A:E2:B0:A6:9B:CE:7B:CC:D3:D4:87:D0
+a=msid-semantic: WMS *
+a=group:BUNDLE audio-tracks video-tracks
+m=audio 0 RTP/SAVPF 7
+c=IN IP4 127.0.0.1
+a=setup:actpass
+a=mid:audio-tracks
+a=inactive
+a=ice-ufrag:bh4zl6wmgfwtaht1
+a=ice-pwd:oatcqvdnd0xujiiu5bqlr8ucu5mv4nnb
+a=candidate:udpcandidate 1 udp 1078862079 192.168.0.161 41723 typ host
+a=candidate:tcpcandidate 1 tcp 1078862079 192.168.0.161 41521 typ host tcptype passive
+a=end-of-candidates
+a=ice-options:renomination
+m=video 0 RTP/SAVPF 7
+c=IN IP4 127.0.0.1
+a=setup:actpass
+a=mid:video-tracks
+a=inactive
+a=ice-ufrag:bh4zl6wmgfwtaht1
+a=ice-pwd:oatcqvdnd0xujiiu5bqlr8ucu5mv4nnb
+a=candidate:udpcandidate 1 udp 1078862079 192.168.0.161 41723 typ host
+a=candidate:tcpcandidate 1 tcp 1078862079 192.168.0.161 41521 typ host tcptype passive
+a=end-of-candidates
+a=ice-options:renomination
+
+
+SECOND PEER OFFER AFTER FIRST PEER VIDEO
+
+"v=0
+o=mediasoup 53453636 2 IN IP4 0.0.0.0
+s=-
+t=0 0
+a=ice-lite
+a=fingerprint:sha-256 45:C1:08:A3:59:66:B3:97:5C:A3:89:53:F9:9E:A4:1F:75:D0:9B:82:2A:E2:B0:A6:9B:CE:7B:CC:D3:D4:87:D0
+a=msid-semantic: WMS *
+a=group:BUNDLE audio-tracks video-tracks
+m=audio 0 RTP/SAVPF 7
+c=IN IP4 127.0.0.1
+a=setup:actpass
+a=mid:audio-tracks
+a=inactive
+a=ice-ufrag:epplgyh86vl3lolm
+a=ice-pwd:jmmmxn21fcysu5q3cvfry4v2o1jlnmzo
+a=candidate:udpcandidate 1 udp 1078862079 192.168.0.161 40050 typ host
+a=candidate:tcpcandidate 1 tcp 1078862079 192.168.0.161 41129 typ host tcptype passive
+a=end-of-candidates
+a=ice-options:renomination
+m=video 0 RTP/SAVPF 7
+c=IN IP4 127.0.0.1
+a=setup:actpass
+a=mid:video-tracks
+a=inactive
+a=ice-ufrag:epplgyh86vl3lolm
+a=ice-pwd:jmmmxn21fcysu5q3cvfry4v2o1jlnmzo
+a=candidate:udpcandidate 1 udp 1078862079 192.168.0.161 40050 typ host
+a=candidate:tcpcandidate 1 tcp 1078862079 192.168.0.161 41129 typ host tcptype passive
+a=end-of-candidates
+a=ice-options:renomination
+↵"
+
