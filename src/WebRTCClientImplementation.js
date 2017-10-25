@@ -1,6 +1,7 @@
 
 import io from 'socket.io-client';
 import AppConfig from './AppConfig';
+import Constants from './Constants';
 
 export default class WebRTCClientImplementation {
 	constructor(config) {
@@ -9,12 +10,15 @@ export default class WebRTCClientImplementation {
 		this.mediaChanged = config.mediaChanged;
 		this.mediaError = config.mediaError;
 
-		this.remoteStreamSides = {};
+		this.remoteIDsToSides = {};
 		this.remoteInfoReceived = false;
+
+		this.pendingStreams = [];
 	}
 
 	init() {
 		this.connection.on('connect', () => {
+			this.connection.emit('requestRemoteIDs', Constants['VIDEO_ROOMNAME']);
 
 			this.connection.on('offer', this.onOfferReceived.bind(this));
 
@@ -53,27 +57,28 @@ export default class WebRTCClientImplementation {
 	}
 
 	remoteStreamReceived(stream) {
-		debugger;
-		const side = this.remoteStreamSides[stream.id];
+		const side = this.remoteIDsToSides[stream.id];
 
 		if (side) {
 			this.mediaChanged(side, {
 				type: 'addStream',
 				payload: stream
 			});
+		} else {
+			this.pendingStreams.push(stream);
 		}
 	}
 
 	// TODO check what is sent
 	remoteStreamRemoved(stream) {
-		const side = this.remoteStreamSides[stream.id];
+		const side = this.remoteIDsToSides[stream.id];
 		if (side) {
 			this.mediaChanged(side, {
 				type: 'removeStream'
 			});
 		}
 
-		delete this.remoteStreamSides[stream.id];
+		delete this.remoteIDsToSides[stream.id];
 	}
 
 	onConnectionStablished() {}
@@ -97,8 +102,10 @@ export default class WebRTCClientImplementation {
 		switch(message.type) {
 			case 'assignRemoteIDs':
 				message.payload.forEach(remotePeerInfo =>
-					this.remoteStreamSide[remotePeerInfo.id] = remotePeerInfo.side
+					this.remoteIDsToSides[remotePeerInfo.id] = remotePeerInfo.side
 				);
+
+				this.flushPendingStreams();
 
 				if (!this.remoteInfoReceived) {
 					this.onConnectionStablished();
@@ -113,6 +120,23 @@ export default class WebRTCClientImplementation {
 
 	sendSignalingEvent(eventName, ...payload) {
 		this.connection.emit(eventName, ...payload);
+	}
+
+	flushPendingStreams() {
+		let streamIndexesRemoved = [];
+
+		this.pendingStreams.forEach((stream, index) => {
+			const side = this.remoteIDsToSides[stream.id];
+
+			if (side) {
+				this.mediaChanged(side, {
+					type: 'removeStream'
+				});
+				streamIndexesRemoved.push(index)
+			}
+		});
+
+		streamIndexesRemoved.forEach(index => this.pendingStreams.splice(index, 1));
 	}
 
 }
