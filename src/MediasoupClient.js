@@ -77,9 +77,14 @@ export default class MediasoupClient extends WebRTCClientImplementation {
 		}.bind(this);
 
 		this.peerConnection.onremovestream = function(evt) {
-			//TODO check what we receive
-			// this.remoteStreamRemoved(evt);
+			this.remoteStreamRemoved(evt.stream);
 		}.bind(this);
+
+		this.peerConnection.ontrack = function() {
+		};
+
+		this.peerConnection.onsignalingstatechange = function(evt) {
+		};
 	}
 
 	joinMediaRoom() {

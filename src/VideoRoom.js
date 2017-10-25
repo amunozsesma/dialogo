@@ -10,6 +10,8 @@ export default class VideoRoom extends Component {
 
 		this.onAddVideoStream = this.addVideoStream.bind(this);
 		this.onRemoveVideoStream = this.removeVideoStream.bind(this);
+
+		this.videoEl = null;
 	}
 
 	componentDidMount() {
@@ -24,22 +26,27 @@ export default class VideoRoom extends Component {
 
 	addVideoStream(stream, side) {
 		if (side === this.props.data.side) {
-			var videoEl = document.createElement('video');
-			this.videoContainer.appendChild(videoEl);
+			this.videoEl = document.createElement('video');
+			this.videoContainer.appendChild(this.videoEl);
 
-			if (videoEl.className.indexOf('video-element') === -1) {
-				videoEl.className += 'video-element ' + side;
+			if (this.videoEl.className.indexOf('video-element') === -1) {
+				this.videoEl.className += 'video-element ' + side;
 			}
 
-			videoEl.srcObject = stream;
-			videoEl.oncontextmenu = function (e) {
+			this.videoEl.srcObject = stream;
+			this.videoEl.oncontextmenu = function (e) {
 				e.preventDefault();
 			};
-			videoEl.autoplay = 'autoplay';
+			this.videoEl.autoplay = 'autoplay';
 		}
 	}
 
 	removeVideoStream(side) {
+		if (side === this.props.data.side && this.videoEl) {
+			this.videoContainer.removeChild(this.videoEl);
+			this.videoEl = null;
+		}
+
 	}
 
 	render() {
