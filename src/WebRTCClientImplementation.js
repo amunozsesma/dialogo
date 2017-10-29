@@ -18,6 +18,7 @@ export default class WebRTCClientImplementation {
 
 	init() {
 		this.connection.on('connect', () => {
+
 			this.connection.emit('requestRemoteIDs', Constants['VIDEO_ROOMNAME']);
 
 			this.connection.on('offer', this.onOfferReceived.bind(this));
@@ -48,7 +49,10 @@ export default class WebRTCClientImplementation {
 	addLocalMedia(side, stream) {
 		this.mediaChanged(side, {
 			type: 'addStream',
-			payload: stream
+			payload: {
+				stream: stream,
+				isLocal: true
+			}
 		});
 	}
 
@@ -62,7 +66,7 @@ export default class WebRTCClientImplementation {
 		if (side) {
 			this.mediaChanged(side, {
 				type: 'addStream',
-				payload: stream
+				payload: {stream: stream}
 			});
 		} else {
 			this.pendingStreams.push(stream);
