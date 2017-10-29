@@ -24,7 +24,7 @@ export default class VideoRoom extends Component {
 		this.props.videoadapter.off('removeVideoStream', this.onRemoveVideoStream);
 	}
 
-	addVideoStream(stream, side) {
+	addVideoStream(stream, side, isLocal) {
 		if (side === this.props.data.side) {
 			this.videoEl = document.createElement('video');
 			this.videoContainer.appendChild(this.videoEl);
@@ -38,6 +38,9 @@ export default class VideoRoom extends Component {
 				e.preventDefault();
 			};
 			this.videoEl.autoplay = 'autoplay';
+			if (isLocal) {
+				this.videoEl.setAttribute('muted', '');
+			}
 		}
 	}
 

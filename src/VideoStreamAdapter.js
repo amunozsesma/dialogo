@@ -22,7 +22,7 @@ export default class VideoStreamAdapter extends Emitr {
 	onMediaChanged(side, message) {
 		switch (message.type) {
 			case 'addStream':
-				this.trigger('addVideoStream', message.payload, side);
+				this.trigger('addVideoStream', message.payload.stream, side, message.payload.isLocal);
 				break;
 			case 'removeStream':
 				this.trigger('removeVideoStream', side);

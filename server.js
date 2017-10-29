@@ -1,25 +1,35 @@
-var path = require('path');
-var webpack = require('webpack');
-var express = require('express');
-var config = require('./webpack.config');
+const path = require('path');
+const webpack = require('webpack');
+const express = require('express');
+const wbpconfig = require('./webpack.config');
+const yetify = require('yetify');
+const config = require('getconfig');
+const fs = require('fs');
+const SignalServer = require('./server/SignalServer');
+const mediaserver = require('./server/MediasoupServer');
+const port = parseInt(process.env.PORT || config.server.port, 10);
+const server_handler = function (req, res) {
+	res.writeHead(404);
+	res.end();
+};
 
-var app = express();
-var compiler = webpack(config);
+const compiler = webpack(wbpconfig);
+const server = express()
+	.use(require('webpack-dev-middleware')(compiler, {
+		publicPath: wbpconfig.output.publicPath
+	}))
+	.use(require('webpack-hot-middleware')(compiler))
+	.get('*', function(req, res) {
+		res.sendFile(path.join(__dirname, 'index.html'));
+	})
+	.listen(port, function(err) {
+		if (err) {
+			return console.error(err);
+		}
+	});
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  publicPath: config.output.publicPath
-}));
 
-app.use(require('webpack-hot-middleware')(compiler));
+const signalServer = new SignalServer(server, config);
+mediaserver(signalServer);
 
-app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.listen(3000, function(err) {
-  if (err) {
-    return console.error(err);
-  }
-
-  console.log('Listening at http://localhost:3000/');
-});
+console.log('started on localhost:' + port);
