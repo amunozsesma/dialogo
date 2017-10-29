@@ -8,7 +8,6 @@ export default class MediasoupClient extends WebRTCClientImplementation {
 		super(config);
 
 		this.peerConnection = null;
-		this.connection = io.connect(AppConfig['SIGNALING_SERVER_URL']);
 	}
 
 	onConnectionStablished() {

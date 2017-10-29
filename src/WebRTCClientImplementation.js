@@ -5,7 +5,7 @@ import Constants from './Constants';
 
 export default class WebRTCClientImplementation {
 	constructor(config) {
-		this.connection = io.connect(AppConfig['SIGNALING_SERVER_URL']);
+		this.connection = io.connect();
 
 		this.mediaChanged = config.mediaChanged;
 		this.mediaError = config.mediaError;

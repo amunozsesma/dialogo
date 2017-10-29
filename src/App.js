@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import SimpleWebRTC from 'simplewebrtc';
-// import VideoRoom from './VideoRoom';
 import DiscussionContainer from './DiscussionContainer';
 import Constants from './Constants';
 import VideoStreamAdapter from './VideoStreamAdapter';
