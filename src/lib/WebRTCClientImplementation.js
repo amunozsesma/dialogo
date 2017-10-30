@@ -22,7 +22,7 @@ export default class WebRTCClientImplementation {
 
 			this.connection.on('offer', this.onOfferReceived.bind(this));
 
-			this.connection.on('answer', this.onAnswerReceived.bind(this));
+			// this.connection.on('answer', this.onAnswerReceived.bind(this));
 
 			this.connection.on('remoteStreamInfo', this.onRemoteStreamInfo.bind(this));
 
@@ -37,9 +37,9 @@ export default class WebRTCClientImplementation {
 		this.connection.emit('answer', answer);
 	}
 
-	sendOffer(offer) {
-		this.connection.emit('offer', offer);
-	}
+	// sendOffer(offer) {
+	// 	this.connection.emit('offer', offer);
+	// }
 
 	requestLocalMedia(side) {
 		this.connection.emit('addMeToQueue', side);
@@ -88,7 +88,7 @@ export default class WebRTCClientImplementation {
 
 	onOfferReceived() {}
 
-	onAnswerReceived() {}
+	// onAnswerReceived() {}
 
 	onSendLocalStream() {}
 

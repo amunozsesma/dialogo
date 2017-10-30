@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import DiscussionContainer from './DiscussionContainer';
 import Constants from './Constants';
-import getVideoStreamAdapter from '../lib/VideoStreamAdapter';
+import getVideoStreamService from '../lib/VideoStreamService';
+import VideoMessageManager from '../lib/VideoMessageManager';
 import Labels from './Labels';
 import './app.less';
 
@@ -9,16 +10,16 @@ export default class App extends Component {
 	constructor() {
 		super();
 
-		this.registeredRemoteVideoElements = [];
-
 		this.state = {
 			left: this.createSide('left'),
 			right: this.createSide('right')
 		}
+
+		this.videoMessageManager = new VideoMessageManager();
 	}
 
 	componentDidMount() {
-		getVideoStreamAdapter().init();
+		this.videoMessageManager.init();
 	}
 
 	onButtonClicked(side) {
@@ -27,7 +28,7 @@ export default class App extends Component {
 				roomState: Constants.ROOM_STATE_ACTIVE
 			});
 
-			getVideoStreamAdapter().startConversation(side);
+			getVideoStreamService().startConversation(side);
 		}
 	}	
 
