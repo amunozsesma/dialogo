@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DiscussionContainer from './DiscussionContainer';
 import Constants from './Constants';
-import VideoStreamAdapter from './VideoStreamAdapter';
+import getVideoStreamAdapter from '../lib/VideoStreamAdapter';
 import Labels from './Labels';
 import './app.less';
 
@@ -10,7 +10,6 @@ export default class App extends Component {
 		super();
 
 		this.registeredRemoteVideoElements = [];
-		this.videoStreamAdapter = new VideoStreamAdapter();
 
 		this.state = {
 			left: this.createSide('left'),
@@ -19,7 +18,7 @@ export default class App extends Component {
 	}
 
 	componentDidMount() {
-		this.videoStreamAdapter.init();
+		getVideoStreamAdapter().init();
 	}
 
 	onButtonClicked(side) {
@@ -28,7 +27,7 @@ export default class App extends Component {
 				roomState: Constants.ROOM_STATE_ACTIVE
 			});
 
-			this.videoStreamAdapter.startConversation(side);
+			getVideoStreamAdapter().startConversation(side);
 		}
 	}	
 
@@ -55,7 +54,7 @@ export default class App extends Component {
 		return (
 			<div className="app-container">
 				<div className="app-title">Diálogo a la fuerza</div>
-				<DiscussionContainer data={this.state} videoadapter={this.videoStreamAdapter} />
+				<DiscussionContainer data={this.state} />
 				<div className="app-info-box app-info">{Labels['App_Info']}</div>
 				<div className="app-info-box app-terms">
 					<div className="app-terms-title">{Labels['App_Terms_Title']}</div>

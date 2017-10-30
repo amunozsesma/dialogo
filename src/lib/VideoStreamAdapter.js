@@ -2,7 +2,9 @@ import Emitr from './emitr';
 import AppConfig from './AppConfig';
 import MediaSoupClient from './MediasoupClient';
 
-export default class VideoStreamAdapter extends Emitr {
+let videoStreamAdapter = null;
+
+class VideoStreamAdapter extends Emitr {
 	constructor() {
 		super();
 		this.webRTCClient = new AppConfig['WEBRTC_CLIENT_IMPLEMENTATION']({
@@ -33,4 +35,12 @@ export default class VideoStreamAdapter extends Emitr {
 
 function logError(err) {
 	console.log('Error in VideoStreamAdapter: ' + err);
+}
+
+export default function getVideoStreamAdapter() {
+	if (!videoStreamAdapter) {
+		videoStreamAdapter = new VideoStreamAdapter();
+	}
+
+	return videoStreamAdapter;
 }

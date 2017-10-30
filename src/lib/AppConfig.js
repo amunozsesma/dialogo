@@ -8,7 +8,8 @@ const AppConfig = {
 	},
 	PEER_CONNECTION_CONSTRAINTS: {
 		optional: []
-	}
+	},
+	VIDEO_ROOM_NAME: 'dialogoalafuerza'
 };
 
 export default AppConfig;

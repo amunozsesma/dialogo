@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import VideoRoomButton from './VideoRoomButton';
 import VideoRoomInfo from './VideoRoomInfo';
+import getVideoStreamAdapter from '../lib/VideoStreamAdapter';
 import './video-room.less'
 
 export default class VideoRoom extends Component {
@@ -11,17 +12,19 @@ export default class VideoRoom extends Component {
 		this.onAddVideoStream = this.addVideoStream.bind(this);
 		this.onRemoveVideoStream = this.removeVideoStream.bind(this);
 
+		this.videoStreamAdapter = getVideoStreamAdapter();
+
 		this.videoEl = null;
 	}
 
 	componentDidMount() {
-		this.props.videoadapter.on('addVideoStream', this.onAddVideoStream);
-		this.props.videoadapter.on('removeVideoStream', this.onRemoveVideoStream);
+		this.videoStreamAdapter.on('addVideoStream', this.onAddVideoStream);
+		this.videoStreamAdapter.on('removeVideoStream', this.onRemoveVideoStream);
 	}
 
 	componentWillUnmount() {
-		this.props.videoadapter.off('addVideoStream', this.onAddVideoStream);
-		this.props.videoadapter.off('removeVideoStream', this.onRemoveVideoStream);
+		this.videoStreamAdapter.off('addVideoStream', this.onAddVideoStream);
+		this.videoStreamAdapter.off('removeVideoStream', this.onRemoveVideoStream);
 	}
 
 	addVideoStream(stream, side, isLocal) {

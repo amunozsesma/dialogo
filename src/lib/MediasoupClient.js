@@ -1,6 +1,5 @@
 import WebRTCClientImplementation from './WebRTCClientImplementation';
 import AppConfig from './AppConfig';
-import Constants from './Constants';
 import io from 'socket.io-client';
 
 export default class MediasoupClient extends WebRTCClientImplementation {
@@ -93,7 +92,7 @@ export default class MediasoupClient extends WebRTCClientImplementation {
 		})
 
 		.then(function (offer) {
-			this.sendSignalingEvent('join', Constants['VIDEO_ROOMNAME'], offer);
+			this.sendSignalingEvent('join', AppConfig['VIDEO_ROOMNAME'], offer);
 		}.bind(this))
 
 		.catch(this.mediaError);

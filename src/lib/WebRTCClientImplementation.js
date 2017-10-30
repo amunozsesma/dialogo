@@ -1,7 +1,6 @@
 
 import io from 'socket.io-client';
 import AppConfig from './AppConfig';
-import Constants from './Constants';
 
 export default class WebRTCClientImplementation {
 	constructor(config) {
@@ -19,7 +18,7 @@ export default class WebRTCClientImplementation {
 	init() {
 		this.connection.on('connect', () => {
 
-			this.connection.emit('requestRemoteIDs', Constants['VIDEO_ROOMNAME']);
+			this.connection.emit('requestRemoteIDs', AppConfig['VIDEO_ROOMNAME']);
 
 			this.connection.on('offer', this.onOfferReceived.bind(this));
 
