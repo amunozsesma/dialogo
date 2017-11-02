@@ -8,7 +8,7 @@ export default class WebRTCMessageHandler {
 	}
 
 	init() {
-		this.connection.on('webrtc-message', this.processMessage.bind(this));
+		this.connection.on('server-webrtc-message', this.processMessage.bind(this));
 
 		this.createPeerConnection();
 		this.joinMediaRoom();
@@ -33,7 +33,7 @@ export default class WebRTCMessageHandler {
 	}
 
 	remoteStreamReceived(stream) {
-		getVideoStreamService().addStream(stream, false);
+		getVideoStreamService().addStream(stream);
 	}
 
 	remoteStreamRemoved(stream) {
@@ -47,7 +47,7 @@ export default class WebRTCMessageHandler {
 		})
 
 		.then(function (offer) {
-			this.connection.emit('webrtc-message', {
+			this.connection.emit('client-webrtc-message', {
 				type: 'join',
 				payload: offer
 			});
@@ -87,7 +87,7 @@ export default class WebRTCMessageHandler {
 		}.bind(this))
 
 		.then(function () {
-			this.connection.emit('webrtc-message', {
+			this.connection.emit('client-webrtc-message', {
 				type: 'answer',
 				payload: this.peerConnection.localDescription
 			})
@@ -111,10 +111,11 @@ export default class WebRTCMessageHandler {
 				this.peerConnection.addTrack(newVideoTrack, stream);
 			} else {
 				this.peerConnection.addStream(stream);
-				setTimeout(() => this.connection.emit('webrtc-message', { type: 'offerMe' }));
+				setTimeout(() => this.connection.emit('client-webrtc-message', { type: 'offerMe' }));
 			}
 
-			getVideoStreamService().addStream(stream, true);
+			const videoStreamService = getVideoStreamService();
+			videoStreamService.addLocalStream(side, stream);
 		}.bind(this))
 
 		.catch(logError);

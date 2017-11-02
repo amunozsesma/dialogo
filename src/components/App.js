@@ -28,7 +28,8 @@ export default class App extends Component {
 				roomState: Constants.ROOM_STATE_ACTIVE
 			});
 
-			getVideoStreamService().startConversation(side);
+			const videoStreamService = getVideoStreamService();
+			videoStreamService.startConversation(side);
 		}
 	}	
 

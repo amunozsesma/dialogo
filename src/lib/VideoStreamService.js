@@ -1,6 +1,5 @@
 import Emitr from './emitr';
 import AppConfig from './AppConfig';
-import MediaSoupClient from './MediasoupClient';
 
 let videoStreamService = null;
 
@@ -11,13 +10,13 @@ class VideoStreamService extends Emitr {
 		this.remoteIDsToSides = {};
 	}
 
-	initRoomInfo(roomInfo) {
+	updateRoomInfo(roomInfo) {
 		roomInfo.forEach(peerInfo =>
 			this.remoteIDsToSides[peerInfo.id] = peerInfo.side
 		);
 	}
 
-	startconversation(side) {
+	startConversation(side) {
 		this.trigger('startconversation', side);
 	}
 
@@ -29,12 +28,16 @@ class VideoStreamService extends Emitr {
 		}
 	}
 
+	addLocalStream(side, stream) {
+		this.trigger('addVideoStream', side, stream, true);
+	}
+
 	removeStream(stream) {
 		const side = this.remoteIDsToSides[stream.id];
 
 		if (side) {
 			this.trigger('removeVideoStream', side);
-			delete this.remoteIDsToSides[id];
+			delete this.remoteIDsToSides[stream.id];
 		}
 	}
 

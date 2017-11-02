@@ -1,53 +1,40 @@
 const Emitter = require('events');
 
 class Participant extends Emitter {
-	constructor(client, offer) {
+	constructor(room, client) {
 		super();
+
+		this.room = room;
 		this.client = client;
-		this.username = client.id;
-		this.usePlanB = true;
-		this.capabilities = offer.sdp;
-		this.peerConnection = null;
-
-		this.addClientListeners();
+		this.client.on('client-queue-message', this.processQueueMessage.bind(this))
 	}
 
-	addClientListeners() {
-		this.client.on('answer', data => this.emit('answer', data));
-		this.client.on('offer', data => this.emit('offer', data));
-		this.client.on('offerMe', () => this.emit('offerMe'));
-		this.client.on('addMeToQueue', side => this.emit('addToQueue', side));
-	}
-
-	send(message) {
+	processQueueMessage(message) {
 		switch(message.type) {
-			case 'offer':
-				this.client.emit('offer', message.payload);
-				break;
-			case 'answer':
-				break;
-			case 'participate':
-				this.client.emit('sendLocalStream', message.payload);
+			case 'addMeToQueue':
+				this.onAddMeToQueue(message.payload);
 				break;
 			default:
-				throw new Error('Unknown message type: ' + message.type);
+				//TODO add loggin
 				break;
 		}
-
-
 	}
 
-	getRequest() {
-		return this.client.conn.transport;
+	onAddMeToQueue(side) {
+		this.room.addMe(this, side);
 	}
 
-	setPeerConnection(peerConnection) {
-		this.peerConnection = peerConnection;
+	startConversation(side) {
+		this.client.emit('server-webrtc-message', {
+			type: 'sendLocalStream',
+			payload: side
+		})
 	}
 
 	leave() {
-		this.emit('leave');
-	}
+		//TODO maybe send remove localstream
+	};
+
 }
 
 module.exports = Participant;

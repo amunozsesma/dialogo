@@ -1,96 +1,66 @@
 const Emitter = require('events');
-const Participant = require('./Participant');
+const ParticipantFactory = require('./ParticipantFactory');
 
 class AppRoom extends Emitter {
 	constructor(name) {
 		super();
 
 		this.roomName = name;
-		this.isRoomReady = false;
-		this.pendingClientsToFlush = {};
+		this.participantFactory = new ParticipantFactory();
 
-		this.allParticipants = [];
-		this.participantsInSideQueue = {
-			'left': [],
-			'right': []
+		this.participants = {};
+		this.currentConversation = {
+			left: null,
+			right: null
 		};
-
-		this.leftConversation = null;
-		this.rightConversation = null;
 	}
 
-	onRoomReady() {
-		if (!this.isRoomReady) {
-			this.isRoomReady = true;
-			flushPendingClients.call(this);
-		}
+	join(client) {
+		const participant = this.participantFactory.getParticipant(this, client);
+		this.participants[client.id] = participant;
+
+		this.sendRemoteIDsToClient(client);
+		return participant;
 	}
 
-	join(client, offer) {
-		const participant = new Participant(client, offer);
-		this.addParticipantListeners(participant);
+	addMe(participant, side) {
+		this.currentConversation[side] = participant;
 
-		if (isParticipantInQueue(participant, this.allParticipants)) {
-			return;
-		}
-		this.allParticipants.push(participant);
-
-		if (this.isRoomReady) {
-			this.emit('join', participant, participant.getRequest());
-		} else {
-			this.pendingClientsToFlush[client.id] = {};
-			this.pendingClientsToFlush[client.id].participant = participant;
-		}
-	}
-
-	removeClient(client) {
-		const participant = this.getPariticipant(client);
-
-		if (participant) {
-			participant.leave();
-			this.removeFromQueues(participant);
-		}
-
-	}
-
-	addParticipantListeners(participant) {
-		participant.on('addToQueue', side => {
-			//TODO this will need some decision logic to indicate when to particpate
-			this[side + 'Conversation'] = participant;
-			participant.send({
-				type: 'participate',
-				payload: side
-			});
-		});
-	}
-
-	canParticipantQueueUp(participant, side) {
-		return !isParticipantInQueue(participant, this.participantsInSideQueue['left'])
-			&& !isParticipantInQueue(participant, this.participantsInSideQueue['right']);
+		// TODO QUEUE logic
+		participant.startConversation(side);
 	}
 
 	sendRemoteIDsToClient(client) {
 		let payload = [];
-		const leftSideID = getSideRemoteID(this.leftConversation, 'left');
-		const rightSideID = getSideRemoteID(this.rightConversation, 'right');
+		const leftSideID = this.getSideRemoteID('left');
+		const rightSideID = this.getSideRemoteID('right');
 
 		leftSideID && payload.push(leftSideID);
 		rightSideID && payload.push(rightSideID);
 
-		client.emit('remoteStreamInfo', {
-			type: 'assignRemoteIDs',
-			payload: payload
-		});
+		client.emit('room-info', payload);
 	}
 
-	spreadRemoteIDInfo() {
-		this.allParticipants.forEach(participant => this.sendRemoteIDsToClient(participant.client));
+	getSideRemoteID(side) {
+		const participant = this.currentConversation[side];
+		if (!participant) {
+			return null;
+		}
+
+		return {
+			id: participant.getMediaID(),
+			side: side
+		};
 	}
 
-	getPariticipant(client) {
-		return this.allParticipants.reduce(function(acc, participant) {
-			return (client.id === participant.username) ? participant : acc;
-		}, null);
+	leave(client) {
+		const participant = this.participants[client.id];
+
+		if (participant) {
+			participant.leave();
+			this.removeFromQueues(participant);
+			delete this.participants[client.id];
+		}
 	}
 
 	removeFromQueues(participant) {
@@ -100,44 +70,13 @@ class AppRoom extends Emitter {
 		if (this.rightConversation === participant) {
 			this.rightConversation = null;
 		}
-
-		this.allParticipants.splice(this.allParticipants.indexOf(participant), 1);
-
-		//TODO remove from side queue
 	}
 
-}
-
-function getSideRemoteID(participant, side) {
-	if (!participant) {
-		return null;
+	spreadRemoteIDInfo() {
+		Object.keys(this.participants).forEach(
+			key => this.sendRemoteIDsToClient(this.participants[key].client)
+		);
 	}
-
-	const peer = participant.peerConnection.peer;
-	const rtpParameters = peer.rtpReceivers[0].rtpParameters;
-	if (!rtpParameters) {
-		return null;
-	}
-	const mediaStreamId = rtpParameters.userParameters.msid.split(/\s/)[0];
-
-	return {
-		id: mediaStreamId,
-		side: side
-	};
-}
-
-function isParticipantInQueue(participant, queue) {
-	return queue.some(function(queueParticipant) {
-		return queueParticipant.username === participant.username;
-	})
-}
-
-function flushPendingClients() {
-	Object.keys(this.pendingClientsToFlush).forEach(clientId => {
-		const pendingClient = this.pendingClientsToFlush[clientId];
-		this.emit('join', pendingClient.participant, pendingClient.participant.getRequest());
-	}, this);
-	this.pendingClientsToFlush = {};
 }
 
 module.exports = AppRoom;

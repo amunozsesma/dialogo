@@ -2,7 +2,7 @@ const socketIO = require('socket.io');
 const uuid = require('node-uuid');
 const crypto = require('crypto');
 const Emitter = require('events');
-const AppRoom = require('./AppRoom');
+const AppRoom = require('./MediasoupRoom');
 
 class SignalServer extends Emitter {
 	constructor(server, config, appRoomfactory) {
@@ -14,15 +14,14 @@ class SignalServer extends Emitter {
 		const io = socketIO.listen(server);
 		io.sockets.on('connection', function (client) {
 
-			client.on('requestRemoteIDs', name => {
-				this.getRoom(name).sendRemoteIDsToClient(client);
+			client.on('join', name => {
+				const room = this.getRoom(name);
+				room.join(client);
 				this.clientsToRooms[client.id] = name;
 			});
 
 			client.on('disconnect', () => this.clientDisconnect(client));
 			client.on('leave', () => this.clientDisconnect(client));
-
-			client.on('join', (name, offer) => this.getRoom(name).join(client, offer));
 
 		}.bind(this));
 	}
@@ -38,7 +37,7 @@ class SignalServer extends Emitter {
 
 	clientDisconnect(client) {
 		if (this.clientsToRooms[client.id]) {
-			this.getRoom(this.clientsToRooms[client.id]).removeClient(client);
+			this.getRoom(this.clientsToRooms[client.id]).leave(client);
 			delete this.clientsToRooms[client.id];
 		}
 	}

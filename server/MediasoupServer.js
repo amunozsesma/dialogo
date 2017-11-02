@@ -37,14 +37,14 @@ module.exports = function(signalServer) {
 	});
 	
 	function handleRoom(appRoom, mediaRoom) {
-		appRoom.on("join", (participant, request) => {
-			handleParticipant(participant, request, appRoom, mediaRoom);
+		appRoom.on("join", (participant) => {
+			handleParticipant(participant, appRoom, mediaRoom);
 		});
 
-		appRoom.onRoomReady();
+		// appRoom.onRoomReady();
 	}
 
-	function handleParticipant(participant, request, appRoom, mediaRoom) {
+	function handleParticipant(participant, appRoom, mediaRoom) {
 		let mediaPeer = mediaRoom.Peer(participant.username);
 		let peerconnection = new RTCPeerConnection({
 			peer     : mediaPeer,
@@ -55,7 +55,7 @@ module.exports = function(signalServer) {
 			}
 		});
 
-		participant.setPeerConnection(peerconnection);
+		participant.peerConnection = peerconnection;
 
 		peerconnection.setCapabilities(participant.capabilities)
 
@@ -65,7 +65,7 @@ module.exports = function(signalServer) {
 
 		.catch((error) => {
 			// request.reject(error);
-			request.destroy();
+			participant.request.destroy();
 
 			// And also close the RTCPeerConnection.
 			peerconnection.close();
@@ -107,10 +107,7 @@ module.exports = function(signalServer) {
 		})
 
 		.then(() => {
-			return participant.send({
-				type: 'offer',
-				payload: peerconnection.localDescription.serialize()
-			});
+			return participant.offer(peerconnection.localDescription.serialize());
 		})
 
 		.catch((error) => {

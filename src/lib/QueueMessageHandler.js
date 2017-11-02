@@ -6,11 +6,11 @@ export default class QueueMessageHandler {
 	}
 
 	init() {
-		this.connection.on('queue-message', this.processMessage.bind(this));
+		this.connection.on('server-queue-message', this.processMessage.bind(this));
 
 		getVideoStreamService().on(
 			'startconversation',
-			side => this.connection.emit('queue-message', {type: 'addMeToQueue', payload: side}),
+			side => this.connection.emit('client-queue-message', {type: 'addMeToQueue', payload: side}),
 			this
 		);
 	}

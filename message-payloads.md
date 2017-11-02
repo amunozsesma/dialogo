@@ -29,7 +29,7 @@ SIGNALING - QUEUES
 **From Client**
 
 ```
-queue-message,
+client-queue-message,
 {
 	type: addMeToQueue,
 	payload: <side>
@@ -39,7 +39,7 @@ queue-message,
 **From Server**
 
 ```
-queue-message,
+server-queue-message,
 {
 	type: positionInQueue,
 	payload: {
@@ -50,7 +50,7 @@ queue-message,
 ```
 
 ```
-queue-message, (provisional, might need to be expanded for turns)
+server-queue-message, (provisional, might need to be expanded for turns)
 {
 	type: remoteStreamInfo,
 	payload: {
@@ -66,7 +66,7 @@ SIGNALING - WEBRTC
 **From Client**
 
 ```
-webrtc-message,
+client-webrtc-message,
 {
 	type: join,
 	payload: offer: <sdpOffer>
@@ -74,14 +74,14 @@ webrtc-message,
 ```
 
 ```
-webrtc-message,
+client-webrtc-message,
 {
 	type: offerMe
 }
 ```
 
 ```
-webrtc-message,
+client-webrtc-message,
 {
 	type: answer,
 	payload: <sdpAnswer>
@@ -90,7 +90,7 @@ webrtc-message,
 
 **From Server**
 ```
-webrtc-message,
+server-webrtc-message,
 {
 	type: offer,
 	payload: <sdpOffer>
@@ -98,7 +98,7 @@ webrtc-message,
 ```
 
 ```
-webrtc-message,
+server-webrtc-message,
 {
 	type: sendLocalStream,
 	payload: <side>
@@ -106,7 +106,7 @@ webrtc-message,
 ```
 
 ```
-webrtc-message,
+server-webrtc-message,
 {
 	type: removeLocalStream,
 	payload: <side>
