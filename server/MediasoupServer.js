@@ -40,8 +40,6 @@ module.exports = function(signalServer) {
 		appRoom.on("join", (participant) => {
 			handleParticipant(participant, appRoom, mediaRoom);
 		});
-
-		// appRoom.onRoomReady();
 	}
 
 	function handleParticipant(participant, appRoom, mediaRoom) {

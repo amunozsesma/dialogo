@@ -31,6 +31,24 @@ class Participant extends Emitter {
 		})
 	}
 
+	stopConversation(side) {
+		//TODO figure out how to enforce this by the server
+		this.client.emit('server-webrtc-message', {
+			type: 'removeLocalStream',
+			payload: side
+		})
+	}
+
+	positionInQueue(position) {
+		this.client.emit('server-queue-message', {
+			type: 'positionInQueue',
+			payload: {
+				side: this.room.whichSide(this),
+				position: position
+			}
+		});
+	}
+
 	leave() {
 		//TODO maybe send remove localstream
 	};

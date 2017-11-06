@@ -20,6 +20,10 @@ export default class App extends Component {
 
 	componentDidMount() {
 		this.videoMessageManager.init();
+
+		getVideoStreamService().on('updatePositionInQueue',
+			(side, position) => this.modifyStateForSide(side, {positionInQueue: position})
+		);
 	}
 
 	onButtonClicked(side) {
@@ -36,11 +40,14 @@ export default class App extends Component {
 	modifyStateForSide(side, newState) {
 		let newSideState = {};
 		newSideState[side] = Object.assign({}, this.state[side], newState);
-		this.setState(Object.assign(this.state, newSideState));
+
+		const state = Object.assign({}, this.state, newSideState);
+		this.setState(state);
 	}
 
 	createSide(side) {
 		const buttonClicked = this.onButtonClicked.bind(this);
+
 		return {
 			roomState: Constants.ROOM_STATE_INACTIVE,
 			side: side,
@@ -48,7 +55,8 @@ export default class App extends Component {
 				bold: Labels['Room_Title'][side].bold,
 				normal: Labels['Room_Title'][side].normal
 			},
-			onButtonClicked: buttonClicked
+			onButtonClicked: buttonClicked,
+			positionInQueue: 0
 		}
 	}
 

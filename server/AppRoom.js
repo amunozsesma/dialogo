@@ -1,5 +1,6 @@
 const Emitter = require('events');
 const ParticipantFactory = require('./ParticipantFactory');
+const ParticipantQueue = require('./ParticipantQueue');
 
 class AppRoom extends Emitter {
 	constructor(name) {
@@ -9,10 +10,14 @@ class AppRoom extends Emitter {
 		this.participantFactory = new ParticipantFactory();
 
 		this.participants = {};
-		this.currentConversation = {
-			left: null,
-			right: null
+		this.sideQueues = {
+			left: new ParticipantQueue(),
+			right: new ParticipantQueue()
 		};
+
+		this.sideQueues['left'].start();
+		this.sideQueues['right'].start();
+
 	}
 
 	join(client) {
@@ -24,10 +29,20 @@ class AppRoom extends Emitter {
 	}
 
 	addMe(participant, side) {
-		this.currentConversation[side] = participant;
+		this.sideQueues[side].add(participant, {
+			onProcessing: function() {
+				participant.startConversation(side);
+			},
+			onFinished: function() {
+				//TODO this is a workaround till can figure out why ontrackremoved is not working
+				Object.keys(this.participants).forEach(
+					id => this.participants[id].stopConversation(side)
+				);
+			}.bind(this),
+			onError: function() {
 
-		// TODO QUEUE logic
-		participant.startConversation(side);
+			}
+		});
 	}
 
 	sendRemoteIDsToClient(client) {
@@ -42,7 +57,7 @@ class AppRoom extends Emitter {
 	}
 
 	getSideRemoteID(side) {
-		const participant = this.currentConversation[side];
+		const participant = this.sideQueues[side].getCurrentParticipant();
 		if (!participant) {
 			return null;
 		}
@@ -64,18 +79,24 @@ class AppRoom extends Emitter {
 	}
 
 	removeFromQueues(participant) {
-		if (this.leftConversation === participant) {
-			this.leftConversation = null;
-		}
-		if (this.rightConversation === participant) {
-			this.rightConversation = null;
-		}
+		this.sideQueues['left'].remove(participant);
+		this.sideQueues['right'].remove(participant);
 	}
 
 	spreadRemoteIDInfo() {
 		Object.keys(this.participants).forEach(
 			key => this.sendRemoteIDsToClient(this.participants[key].client)
 		);
+	}
+
+	whichSide(participant) {
+		if (this.sideQueues['left'].isParticipantInQueue(participant)) {
+			return 'left';
+		}
+		if (this.sideQueues['right'].isParticipantInQueue(participant)) {
+			return 'right';
+		}
+		return null;
 	}
 }
 

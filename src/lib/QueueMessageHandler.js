@@ -18,6 +18,7 @@ export default class QueueMessageHandler {
 	processMessage(message) {
 		switch(message.type) {
 			case 'positionInQueue':
+				this.onPositionInQueue(message.payload);
 				break;
 			case 'remoteStreamInfo':
 				break;
@@ -25,6 +26,10 @@ export default class QueueMessageHandler {
 				console.log(`Message type not implemented ${message.type}`);
 				break;
 		}
+	}
+
+	onPositionInQueue(payload) {
+		getVideoStreamService().updatePositionInQueue(payload.side, payload.position);
 	}
 
 }

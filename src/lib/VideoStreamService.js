@@ -46,7 +46,7 @@ class VideoStreamService extends Emitr {
 	}
 
 	updatePositionInQueue(side, position) {
-
+		this.trigger('updatePositionInQueue', side, position);
 	}
 }
 

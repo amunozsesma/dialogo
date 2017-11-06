@@ -28,6 +28,9 @@ export default class VideoRoom extends Component {
 	}
 
 	addVideoStream(side, stream, isLocal) {
+		//TODO this shouldn't be needed but just in case
+		this.removeVideoStream(this.props.data.side);
+
 		if (side === this.props.data.side) {
 			this.videoEl = document.createElement('video');
 			this.videoContainer.appendChild(this.videoEl);
@@ -49,6 +52,7 @@ export default class VideoRoom extends Component {
 
 	removeVideoStream(side) {
 		if (side === this.props.data.side && this.videoEl) {
+			this.videoEl.srcObject.getTracks().forEach(track => track.stop());
 			this.videoContainer.removeChild(this.videoEl);
 			this.videoEl = null;
 		}
@@ -67,6 +71,7 @@ export default class VideoRoom extends Component {
 				<div className="video-room-footer">
 					<VideoRoomButton data={this.props.data}/>
 				</div>
+				<div>{this.props.data.positionInQueue}</div>
 			</div>
 		);
 	}

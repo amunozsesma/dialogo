@@ -123,6 +123,7 @@ export default class WebRTCMessageHandler {
 
 	onRemoveLocalStream(side) {
 		getVideoStreamService().removeLocalStream(side);
+		this.connection.emit('client-webrtc-message', { type: 'offerMe' });
 	}
 }
 
