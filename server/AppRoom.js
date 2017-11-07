@@ -30,9 +30,13 @@ class AppRoom extends Emitter {
 
 	addMe(participant, side) {
 		this.sideQueues[side].add(participant, {
-			onProcessing: function() {
+			onProcessing: function(opts) {
+				Object.keys(this.participants).forEach(
+					id => this.participants[id].streamInfo(side, opts.ttl)
+				);
+
 				participant.startConversation(side);
-			},
+			}.bind(this),
 			onFinished: function() {
 				//TODO this is a workaround till can figure out why ontrackremoved is not working
 				Object.keys(this.participants).forEach(

@@ -49,6 +49,16 @@ class Participant extends Emitter {
 		});
 	}
 
+	streamInfo(side, ttl) {
+		this.client.emit('server-queue-message', {
+			type: 'remoteStreamInfo',
+			payload: {
+				side: side,
+				ttl: ttl
+			}
+		});
+	}
+
 	leave() {
 		//TODO maybe send remove localstream
 	};

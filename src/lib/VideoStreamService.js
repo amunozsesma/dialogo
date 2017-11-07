@@ -48,6 +48,10 @@ class VideoStreamService extends Emitr {
 	updatePositionInQueue(side, position) {
 		this.trigger('updatePositionInQueue', side, position);
 	}
+
+	remoteStreamInfo(side, ttl) {
+		this.trigger('remoteStreamInfo', side, ttl);
+	}
 }
 
 function logError(err) {
