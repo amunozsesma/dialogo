@@ -102,6 +102,19 @@ class AppRoom extends Emitter {
 		}
 		return null;
 	}
+
+	spreadTurnInfo(side, isTalking) {
+		this.sideQueues[side].getAllParticipants().forEach(
+			participant => participant.turnInfo(side, isTalking)
+		);
+		this.sideQueues[oppositeSide(side)].getAllParticipants().forEach(
+			participant => participant.turnInfo(oppositeSide(side), !isTalking)
+		);
+	}
+}
+
+function oppositeSide(side) {
+	return side === 'left' ? 'right' : 'left';
 }
 
 module.exports = AppRoom;

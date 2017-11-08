@@ -36,6 +36,19 @@ client-queue-message,
 }
 ```
 
+```
+client-queue-message,
+{
+	type: turnInfo,
+	payload: {
+		side: <side>,
+		isTalking: <Boolean>,
+		info: <turnsleft, etc>
+	}
+}
+```
+
+
 **From Server**
 
 ```
@@ -55,7 +68,19 @@ server-queue-message, (provisional, might need to be expanded for turns)
 	type: remoteStreamInfo,
 	payload: {
 		side: <side>,
-		ttl: <timeToLeave> --> starts counter on client side
+		ttl: <timeToLeave> --> starts counter on client side	
+	}
+}
+```
+
+```
+server-queue-message,
+{
+	type: turnInfo,
+	payload: {
+		side: <side>,
+		isTalking: <Boolean>,
+		info: <turnsleft, etc>
 	}
 }
 ```

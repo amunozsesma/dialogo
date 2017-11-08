@@ -52,6 +52,10 @@ class VideoStreamService extends Emitr {
 	remoteStreamInfo(side, ttl) {
 		this.trigger('remoteStreamInfo', side, ttl);
 	}
+
+	audioStreamChanged(side, isAudioEnabled) {
+		this.trigger('audioStreamChanged', side, isAudioEnabled);
+	}
 }
 
 function logError(err) {

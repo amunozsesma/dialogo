@@ -14,6 +14,9 @@ class Participant extends Emitter {
 			case 'addMeToQueue':
 				this.onAddMeToQueue(message.payload);
 				break;
+			case 'turnInfo':
+				this.onTurnInfo(message.payload);
+				break;
 			default:
 				//TODO add loggin
 				break;
@@ -22,6 +25,10 @@ class Participant extends Emitter {
 
 	onAddMeToQueue(side) {
 		this.room.addMe(this, side);
+	}
+
+	onTurnInfo(payload) {
+		this.room.spreadTurnInfo(payload.side, payload.isTalking);
 	}
 
 	startConversation(side) {
@@ -55,6 +62,16 @@ class Participant extends Emitter {
 			payload: {
 				side: side,
 				ttl: ttl
+			}
+		});
+	}
+
+	turnInfo(side, isTalking) {
+		this.client.emit('server-queue-message', {
+			type: 'turnInfo',
+			payload: {
+				side: side,
+				isTalking: isTalking
 			}
 		});
 	}

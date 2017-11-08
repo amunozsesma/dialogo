@@ -19,6 +19,7 @@ export default class WebRTCMessageHandler {
 
 		this.peerConnection.onaddstream = function(evt) {
 			this.remoteStreamReceived(evt.stream);
+			//TODO try subscribing to mediastreamtrack.onended
 		}.bind(this);
 
 		this.peerConnection.onremovestream = function(evt) {

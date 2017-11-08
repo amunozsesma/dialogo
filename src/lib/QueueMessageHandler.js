@@ -10,7 +10,28 @@ export default class QueueMessageHandler {
 
 		getVideoStreamService().on(
 			'startconversation',
-			side => this.connection.emit('client-queue-message', {type: 'addMeToQueue', payload: side}),
+			side => this.connection.emit(
+				'client-queue-message',
+				{
+					type: 'addMeToQueue',
+					payload: side
+				}
+			),
+			this
+		);
+
+		getVideoStreamService().on(
+			'audioStreamChanged',
+			(side, isAudioEnabled) => this.connection.emit(
+				'client-queue-message',
+				{
+					type: 'turnInfo',
+					payload: {
+						side: side,
+						isTalking: isAudioEnabled
+					}
+				}
+			),
 			this
 		);
 	}
@@ -23,6 +44,8 @@ export default class QueueMessageHandler {
 			case 'remoteStreamInfo':
 				this.onRemoteStreamInfo(message.payload);
 				break;
+			case 'turnInfo':
+				this.onTurnInfo(message.payload);
 			default:
 				console.log(`Message type not implemented ${message.type}`);
 				break;
@@ -35,6 +58,10 @@ export default class QueueMessageHandler {
 
 	onRemoteStreamInfo(payload) {
 		getVideoStreamService().remoteStreamInfo(payload.side, payload.ttl);
+	}
+
+	onTurnInfo(payload) {
+		getVideoStreamService().audioStreamChanged(payload.side, payload.isTalking);
 	}
 
 }

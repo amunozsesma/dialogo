@@ -11,6 +11,7 @@ export default class VideoRoom extends Component {
 
 		this.onAddVideoStream = this.addVideoStream.bind(this);
 		this.onRemoveVideoStream = this.removeVideoStream.bind(this);
+		this.onAudioStreamChanged = this.audioStreamChanged.bind(this);
 
 		this.videoStreamAdapter = getVideoStreamService();
 
@@ -20,16 +21,19 @@ export default class VideoRoom extends Component {
 	componentDidMount() {
 		this.videoStreamAdapter.on('addVideoStream', this.onAddVideoStream);
 		this.videoStreamAdapter.on('removeVideoStream', this.onRemoveVideoStream);
+		this.videoStreamAdapter.on('audioStreamChanged', this.onAudioStreamChanged);
 	}
 
 	componentWillUnmount() {
 		this.videoStreamAdapter.off('addVideoStream', this.onAddVideoStream);
 		this.videoStreamAdapter.off('removeVideoStream', this.onRemoveVideoStream);
+		this.videoStreamAdapter.off('audioStreamChanged', this.onAudioStreamChanged);
 	}
 
 	addVideoStream(side, stream, isLocal) {
 		//TODO this shouldn't be needed but just in case
 		this.removeVideoStream(this.props.data.side);
+		this.isVideoLocal = isLocal;
 
 		if (side === this.props.data.side) {
 			this.videoEl = document.createElement('video');
@@ -59,6 +63,26 @@ export default class VideoRoom extends Component {
 
 	}
 
+	audioStreamChanged(side, isAudioEnabled) {
+		if (side === this.props.data.side && this.isVideoLocal && isAudioEnabled) {
+			this.videoEl.srcObject.getAudioTracks().forEach(
+				audioTrack => audioTrack.enabled = true
+			);
+		}
+	}
+
+	//TODO provisional to chekck turn swapping
+	onButtonClicked() {
+		//Send turn info with and mute
+		if (this.isVideoLocal) {
+			this.videoEl.srcObject.getAudioTracks().forEach(
+				audioTrack => audioTrack.enabled = false
+			);
+
+			getVideoStreamService().audioStreamChanged(this.props.data.side, false);
+		}
+	}
+
 	render() {
 		return (
 			<div className="video-room-container">
@@ -70,8 +94,9 @@ export default class VideoRoom extends Component {
 				<VideoRoomInfo data={this.props.data} />
 				<div className="video-room-footer">
 					<VideoRoomButton data={this.props.data}/>
+					<button type="button" onClick={this.onButtonClicked.bind(this)}>turn</button>
 				</div>
-				<div>{this.props.data.positionInQueue}</div>
+				<div>{'Position: ' + this.props.data.positionInQueue}</div>
 			</div>
 		);
 	}
