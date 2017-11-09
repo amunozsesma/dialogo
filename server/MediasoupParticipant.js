@@ -33,12 +33,14 @@ class MediasoupParticipant extends Participant {
 	}
 
 	getMediaID() {
-		if (this.peerConnection) {
-			const peer = this.peerConnection.peer;
-			const rtpParameters = peer.rtpReceivers[0].rtpParameters;
+		const peer = this.peerConnection.peer;
+		const videoReceivers = peer.rtpReceivers.slice().filter(
+			receiver => receiver.kind === 'audio' && receiver.rtpParameters
+		);
 
-			return (rtpParameters) ? rtpParameters.userParameters.msid.split(/\s/)[0] : null;
-		}
+		return videoReceivers.map(receiver => {
+			return receiver.rtpParameters.userParameters.msid.split(/\s/)[0];
+		});
 	}
 
 	onJoin(offer) {
@@ -65,6 +67,7 @@ class MediasoupParticipant extends Participant {
 			payload: offer
 		});
 	}
+
 }
 
 module.exports = MediasoupParticipant;

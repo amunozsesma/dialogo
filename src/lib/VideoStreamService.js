@@ -11,9 +11,12 @@ class VideoStreamService extends Emitr {
 	}
 
 	updateRoomInfo(roomInfo) {
-		roomInfo.forEach(peerInfo =>
-			this.remoteIDsToSides[peerInfo.id] = peerInfo.side
-		);
+		if (roomInfo.streams) {
+			roomInfo.streams.forEach(peerInfo =>
+				this.remoteIDsToSides[peerInfo.id] = peerInfo.side
+			);
+		}
+
 		this.trigger('roomInfo', roomInfo)
 	}
 

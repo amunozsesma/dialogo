@@ -53,26 +53,22 @@ class AppRoom extends Emitter {
 	}
 
 	sendRemoteIDsToClient(client) {
-		let payload = [];
-		const leftSideID = this.getSideRemoteID('left');
-		const rightSideID = this.getSideRemoteID('right');
-
-		leftSideID && payload.push(leftSideID);
-		rightSideID && payload.push(rightSideID);
-
-		client.emit('room-info', payload);
+		const streams = [].concat(this.getSideRemoteID('left'), this.getSideRemoteID('right'));
+		client.emit('room-info', {streams: streams});
 	}
 
 	getSideRemoteID(side) {
 		const participant = this.sideQueues[side].getCurrentParticipant();
-		if (!participant) {
-			return null;
+		if (participant) {
+			const mediaID = participant.getMediaID();
+
+			return mediaID.map(
+				media => {return {id: media, side: side}}
+			);
+		} else {
+			return [];
 		}
 
-		return {
-			id: participant.getMediaID(),
-			side: side
-		};
 	}
 
 	leave(client) {

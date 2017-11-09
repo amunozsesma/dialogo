@@ -21,7 +21,6 @@ room-info,
 			side: <side>
 		}
 	],
-	ttl: <timeToLeavePerClient>,
 	currentTtl: <timeConsumedInCurrentConversation>
 	connectedUsers: <numberOfUsers>
 ```

@@ -33,7 +33,7 @@ export default class VideoRoom extends Component {
 
 	addVideoStream(side, stream, isLocal) {
 		//TODO this shouldn't be needed but just in case
-		this.removeVideoStream(this.props.data.side);
+		this.removeVideoStream(side);
 		this.isVideoLocal = isLocal;
 
 		if (side === this.props.data.side) {
