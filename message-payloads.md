@@ -11,18 +11,20 @@ join,
 
 ```
 room-info,
-[
-	{
-		id: <streamID>,
-		side: <side>
-	},
-	{
-		id: <streamID>,
-		side: <side>
-	}
-]
+	streams: [
+		{
+			id: <streamID>,
+			side: <side>
+		},
+		{
+			id: <streamID>,
+			side: <side>
+		}
+	],
+	ttl: <timeToLeavePerClient>,
+	currentTtl: <timeConsumedInCurrentConversation>
+	connectedUsers: <numberOfUsers>
 ```
-
 
 SIGNALING - QUEUES
 =====================
@@ -58,17 +60,6 @@ server-queue-message,
 	payload: {
 		side: <side>,
 		position: <positionInQueue>
-	}
-}
-```
-
-```
-server-queue-message, (provisional, might need to be expanded for turns)
-{
-	type: remoteStreamInfo,
-	payload: {
-		side: <side>,
-		ttl: <timeToLeave> --> starts counter on client side	
 	}
 }
 ```

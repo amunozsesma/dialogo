@@ -10,9 +10,12 @@ class AppRoom extends Emitter {
 		this.participantFactory = new ParticipantFactory();
 
 		this.participants = {};
+		this.queueConfig = {
+			ttl: 20000
+		};
 		this.sideQueues = {
-			left: new ParticipantQueue(),
-			right: new ParticipantQueue()
+			left: new ParticipantQueue(this.queueConfig),
+			right: new ParticipantQueue(this.queueConfig)
 		};
 
 		this.sideQueues['left'].start();

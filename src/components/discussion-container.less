@@ -4,8 +4,41 @@
 	display: flex;
 }
 
-.discussion-spliter {
-	border: 1px solid @standard-app-color;
+.discusion-middle-info {
 	display: flex;
-	flex: 0 auto;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+
+	&-spliter {
+		position: absolute;
+	    height: 120%;
+	    border: 1px solid black;
+	}
+
+	&-ttl {
+		bottom: 0;
+		position: absolute;
+		width: 250px;
+		display: flex;
+		flex-direction: column;
+		padding: 10px;
+		color: white;
+		background-color: black;
+		border-radius: 10px;
+		align-items: center;
+	}
+
+	&-users {
+		position: absolute;
+		width: 200px;
+		background-color: white;
+		border: 1px solid black;
+		bottom: -60px;
+		padding: 10px;
+		border-radius: 10px;
+		flex-direction: column;
+		align-items: center;
+		display: flex;
+	}
 }

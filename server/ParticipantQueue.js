@@ -4,7 +4,7 @@ class ParticipantQueue {
 		this.inProcess = null;
 
 		this.config = {
-			ttl: 20000,
+			ttl: 0,
 			capacity: 20
 		};
 		this.config = Object.assign(this.config, config);
@@ -23,6 +23,10 @@ class ParticipantQueue {
 		} else {
 			callbacks && callbacks.onError && onError();
 		}
+
+		if (this.config.ttl === 0) {
+			this.processNext();
+		}
 	}
 
 	remove(participant) {
@@ -36,7 +40,10 @@ class ParticipantQueue {
 
 	start() {
 		this.processNext();
-		setInterval(this.processNext.bind(this), this.config.ttl);
+
+		if (this.config.ttl > 0) {
+			setInterval(this.processNext.bind(this), this.config.ttl);
+		}
 	}
 
 	processNext() {

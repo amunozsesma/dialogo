@@ -11,6 +11,10 @@ export default class App extends Component {
 		super();
 
 		this.state = {
+			shared: {
+				currentTtl: 0,
+				users: 1
+			},
 			left: this.createSide('left'),
 			right: this.createSide('right')
 		}
@@ -22,20 +26,65 @@ export default class App extends Component {
 		this.videoMessageManager.init();
 
 		getVideoStreamService().on('updatePositionInQueue',
-			(side, position) => this.modifyStateForSide(side, {positionInQueue: position})
+			(side, position) => {
+				this.modifyStateForSide(side, {
+					roomState: Constants.ROOM_STATE_QUEUING,
+					positionInQueue: position
+				});
+
+				const oppositeSide = (side === 'left') ? 'right' : 'left';
+				this.modifyStateForSide(oppositeSide, {
+					roomState: Constants.ROOM_STATE_DISABLED,
+					positionInQueue: position
+				});
+			}
+
 		);
+
+		getVideoStreamService().on('addVideoStream',
+			(side, stream, isLocal) => {
+				if (isLocal) {
+					this.modifyStateForSide('left', {
+						roomState: Constants.ROOM_STATE_TALKING
+					});
+					this.modifyStateForSide('right', {
+						roomState: Constants.ROOM_STATE_TALKING
+					});
+				}
+			}
+		);
+
+		getVideoStreamService().on('removeVideoStream',
+			(side, isLocal) => {
+				if (isLocal) {
+					this.modifyStateForSide('left', {
+						roomState: Constants.ROOM_STATE_INITIAL,
+						positionInQueue: -1
+					});
+					this.modifyStateForSide('right', {
+						roomState: Constants.ROOM_STATE_INITIAL,
+						positionInQueue: -1
+					});
+				}
+			}
+		);
+
+		// getVideoStreamService().on('configUpdated',
+		// 	config => this.modifySharedState(config)
+		// );
 	}
 
 	onButtonClicked(side) {
-		if (this.state[side].roomState === Constants.ROOM_STATE_INACTIVE) {
-			this.modifyStateForSide(side, {
-				roomState: Constants.ROOM_STATE_ACTIVE
-			});
-
-			const videoStreamService = getVideoStreamService();
-			videoStreamService.startConversation(side);
+		if (this.state['left'].roomState === Constants.ROOM_STATE_INITIAL && this.state['right'].roomState === Constants.ROOM_STATE_INITIAL) {
+			getVideoStreamService().startConversation(side);
 		}
 	}	
+
+	modifySharedState(sharedState) {
+		const shared = Object.assign({}, this.state['shared'], sharedState);
+		let newState = {shared: shared};
+		this.setState(Object.assign({}, this.state, newState));
+	}
 
 	modifyStateForSide(side, newState) {
 		let newSideState = {};
@@ -49,14 +98,15 @@ export default class App extends Component {
 		const buttonClicked = this.onButtonClicked.bind(this);
 
 		return {
-			roomState: Constants.ROOM_STATE_INACTIVE,
+			roomState: Constants.ROOM_STATE_INITIAL,
 			side: side,
 			roomTitle: {
 				bold: Labels['Room_Title'][side].bold,
 				normal: Labels['Room_Title'][side].normal
 			},
 			onButtonClicked: buttonClicked,
-			positionInQueue: 0
+			positionInQueue: -1,
+			ttl: 0
 		}
 	}
 
@@ -64,12 +114,7 @@ export default class App extends Component {
 		return (
 			<div className="app-container">
 				<div className="app-title">Diálogo a la fuerza</div>
-				<DiscussionContainer data={this.state} />
-				<div className="app-info-box app-info">{Labels['App_Info']}</div>
-				<div className="app-info-box app-terms">
-					<div className="app-terms-title">{Labels['App_Terms_Title']}</div>
-					<div className="app-terms-content">{Labels['App_Terms_Content']}</div>
-				</div>
+				<DiscussionContainer data={this.state}/>
 			</div>
 		);
 	}

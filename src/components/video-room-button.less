@@ -1,30 +1,94 @@
 @import "common-styles";
 
+.video-room-button-container {
+    position: relative;
+}
+
 .video-room-button {
-    text-transform: uppercase;
-    background-color: @standard-app-color;
+    background: @gradiant-green;
     color: white;
-    font-weight: bold;
     width: 120px;
-    height: 50px;
+    height: 40px;
     text-align: center;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    margin-top: 20px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: black;
+    position: relative;
+
+    &:hover {
+        cursor: pointer;
+        background: @gradiant-green-hover;
+    }
+
+    &.disabled {
+        background: @gradiant-grey;
+        color: @yellow;
+
+        &:hover {
+            background: @gradiant-grey;
+            cursor: default;
+        }
+    }
+
+    &.queuing {
+        background: @gradiant-grey;
+        color: @yellow;
+
+        &:hover {
+            background: @gradiant-grey;
+            cursor: default;
+        }
+    }
+
+    &.talking:hover {
+        background: @gradiant-green;
+        cursor: default;
+    }
 }
 
-.video-room-button.disabled {
-    background-color: @button-disabled-color;
-    color: #e6e6e6;
+.video-room-button-info {
+    width: 120px;
+    text-align: center;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: black;
+    padding-top: 10px;
+    margin-top: -6px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background: @gradiant-grey;
+    position: absolute;
+    z-index: -1;
+
+    &-splitter {
+        border-bottom: 1px solid black;
+        width: 100px;
+        margin: 5px 0 5px 10px;
+    }
 }
 
-.video-room-button:hover {
-    cursor: pointer;
-    background-color: @button-hover-color;
+.video-room-transition-enter {
+    margin-top: -61px;
 }
 
-.video-room-button.disabled:hover {
-    cursor: default;
-    background-color: @button-disabled-color;
+.video-room-transition-enter.video-room-transition-enter-active {
+    margin-top: -6px;
+    transition: all 500ms ease-in;
+}
+
+.video-room-transition-leave {
+    margin-top: -6px;
+}
+
+.video-room-transition-leave.video-room-transition-leave-active {
+    margin-top: -61px;
+    transition: all 100ms ease-in;
+
 }

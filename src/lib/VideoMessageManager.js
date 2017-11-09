@@ -18,14 +18,15 @@ export default class VideoMessageManager {
 
 	init() {
 		this.connection.on('connect', () => {
-			this.connection.on('room-info', initHandlers.bind(this));
+			this.connection.on('room-info', onRoomInfo.bind(this));
 			this.connection.emit('join', AppConfig['VIDEO_ROOM_NAME']);
 		});
 	}
 }
 
-function initHandlers(roomInfo) {
+function onRoomInfo(roomInfo) {
 	getVideoStreamService().updateRoomInfo(roomInfo);
+
 	if (!this.initialised) {
 		this.handlers.forEach(handler => handler.init());
 		this.initialised = true;

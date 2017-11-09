@@ -1,7 +1,8 @@
 const Constants = {
-	ROOM_STATE_WAITING: 'room-waiting',
-	ROOM_STATE_ACTIVE: 'room-active',
-	ROOM_STATE_INACTIVE: 'room-queuing',
+	ROOM_STATE_QUEUING: 'room-queuing',
+	ROOM_STATE_TALKING: 'room-talking',
+	ROOM_STATE_INITIAL: 'room-initial',
+	ROOM_STATE_DISABLED: 'room-disabled'
 };
 
 export default Constants;

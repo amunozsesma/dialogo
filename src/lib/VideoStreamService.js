@@ -14,6 +14,7 @@ class VideoStreamService extends Emitr {
 		roomInfo.forEach(peerInfo =>
 			this.remoteIDsToSides[peerInfo.id] = peerInfo.side
 		);
+		this.trigger('roomInfo', roomInfo)
 	}
 
 	startConversation(side) {
@@ -42,7 +43,7 @@ class VideoStreamService extends Emitr {
 	}
 
 	removeLocalStream(side) {
-		this.trigger('removeVideoStream', side);
+		this.trigger('removeVideoStream', side, true);
 	}
 
 	updatePositionInQueue(side, position) {
