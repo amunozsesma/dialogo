@@ -21,7 +21,8 @@ room-info,
 			side: <side>
 		}
 	],
-	connectedUsers: <numberOfUsers>
+	connectedUsers: <numberOfUsers>,
+	roomTTL: <time unaltered for each conversation configured for this room>
 
 ```
 

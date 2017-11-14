@@ -12,8 +12,8 @@ export default class App extends Component {
 
 		this.state = {
 			shared: {
-				discussionTTL: 0,
-				connectedUsers: 1
+				connectedUsers: 1,
+				roomTTL: 0
 			},
 			left: this.createSide('left'),
 			right: this.createSide('right')
@@ -72,6 +72,7 @@ export default class App extends Component {
 		getVideoStreamService().on('roomInfo',
 			info => this.modifySharedState(info)
 		);
+
 	}
 
 	onButtonClicked(side) {
@@ -81,9 +82,9 @@ export default class App extends Component {
 	}	
 
 	modifySharedState(sharedState) {
-		const shared = Object.assign({}, this.state['shared'], sharedState);
-		let newState = {shared: shared};
-		this.setState(Object.assign({}, this.state, newState));
+		const stateCopy = Object.assign({}, this.state);
+		const shared = Object.assign({}, stateCopy['shared'], sharedState);
+		this.setState(Object.assign({}, stateCopy, {shared: shared}));
 	}
 
 	modifyStateForSide(side, newState) {
@@ -92,9 +93,10 @@ export default class App extends Component {
 		}
 
 		let newSideState = {};
-		newSideState[side] = Object.assign({}, this.state[side], newState);
+		const stateCopy = Object.assign({}, this.state);
+		newSideState[side] = Object.assign({}, stateCopy[side], newState);
 
-		const state = Object.assign({}, this.state, newSideState);
+		const state = Object.assign({}, stateCopy, newSideState);
 		this.setState(state);
 	}
 
