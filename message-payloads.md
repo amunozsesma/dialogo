@@ -21,8 +21,8 @@ room-info,
 			side: <side>
 		}
 	],
-	currentTtl: <timeConsumedInCurrentConversation>
 	connectedUsers: <numberOfUsers>
+
 ```
 
 SIGNALING - QUEUES
@@ -36,19 +36,13 @@ client-queue-message,
 	payload: <side>
 }
 ```
-
 ```
-client-queue-message,
+client-queue-message, --> cancel button
 {
-	type: turnInfo,
-	payload: {
-		side: <side>,
-		isTalking: <Boolean>,
-		info: <turnsleft, etc>
-	}
+	type: removeMeFromQueue,
+	payload: <side>
 }
 ```
-
 
 **From Server**
 
@@ -63,14 +57,47 @@ server-queue-message,
 }
 ```
 
+
+SIGNALING - CONVERSATION
+=====================
+**From Client**
 ```
-server-queue-message,
+client-conversation-message, 
 {
-	type: turnInfo,
+	type: conversationEnd,
 	payload: {
-		side: <side>,
-		isTalking: <Boolean>,
-		info: <turnsleft, etc>
+		side: <side>
+	}
+}
+```
+
+**From Server**
+```
+server-conversation-message,
+{
+	type: conversationStart,
+	payload: {
+		side: <side>
+	}
+}
+```
+
+```
+server-conversation-message, --> sent to all clients, when connecting and when client turnInfo is received (spreads the client info) 
+{
+	type: conversationInfo,
+	payload: {
+		discussionTTL: <ttl left in discussion>,
+		left: {
+			isTalking: <Boolean>,
+			TTL: <ttl left in left conversation>,
+			turnTTL: <0 | ttl left in current turn if it is talking> 
+		},
+		right: {
+			isTalking: <Boolean>,
+			TTL: <ttl left in right conversation>,
+			turnTTL: <0 || ttl left in current turn if it is talking>
+		}
 	}
 }
 ```

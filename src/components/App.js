@@ -12,8 +12,8 @@ export default class App extends Component {
 
 		this.state = {
 			shared: {
-				currentTtl: 0,
-				users: 1
+				discussionTTL: 0,
+				connectedUsers: 1
 			},
 			left: this.createSide('left'),
 			right: this.createSide('right')
@@ -69,9 +69,9 @@ export default class App extends Component {
 			}
 		);
 
-		// getVideoStreamService().on('configUpdated',
-		// 	config => this.modifySharedState(config)
-		// );
+		getVideoStreamService().on('roomInfo',
+			info => this.modifySharedState(info)
+		);
 	}
 
 	onButtonClicked(side) {
@@ -87,6 +87,10 @@ export default class App extends Component {
 	}
 
 	modifyStateForSide(side, newState) {
+		if (!newState) {
+			return;
+		}
+
 		let newSideState = {};
 		newSideState[side] = Object.assign({}, this.state[side], newState);
 
@@ -106,7 +110,9 @@ export default class App extends Component {
 			},
 			onButtonClicked: buttonClicked,
 			positionInQueue: -1,
-			ttl: 0
+			isTalking: false,
+			TTL: 0,
+			turnTTL: 0
 		}
 	}
 

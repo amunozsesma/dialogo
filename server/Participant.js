@@ -56,23 +56,10 @@ class Participant extends Emitter {
 		});
 	}
 
-	streamInfo(side, ttl) {
-		this.client.emit('server-queue-message', {
-			type: 'remoteStreamInfo',
-			payload: {
-				side: side,
-				ttl: ttl
-			}
-		});
-	}
-
-	turnInfo(side, isTalking) {
-		this.client.emit('server-queue-message', {
-			type: 'turnInfo',
-			payload: {
-				side: side,
-				isTalking: isTalking
-			}
+	conversationInfo(info) {
+		this.client.emit('server-conversation-message', {
+			type: 'conversationInfo',
+			payload: info
 		});
 	}
 

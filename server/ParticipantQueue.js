@@ -3,16 +3,15 @@ class ParticipantQueue {
 		this.queue = [];
 		this.inProcess = null;
 
-		this.config = {
-			ttl: 0,
-			capacity: 20
-		};
-		this.config = Object.assign(this.config, config);
+		this.ttl = (config.ttl) ? config.ttl : 40000;
+		this.capacity = (config.queueCapacity) ? config.queueCapacity : 20;
+
+		this.start();
 	}
 
 	add(participant, callbacks) {
 
-		if (this.queue.length < this.config.capacity) {
+		if (this.queue.length < this.capacity) {
 			this.queue.push({
 				participant: participant,
 				onProcessing: callbacks.onProcessing,
@@ -24,7 +23,7 @@ class ParticipantQueue {
 			callbacks && callbacks.onError && onError();
 		}
 
-		if (this.config.ttl === 0) {
+		if (this.ttl === 0) {
 			this.processNext();
 		}
 	}
@@ -41,8 +40,8 @@ class ParticipantQueue {
 	start() {
 		this.processNext();
 
-		if (this.config.ttl > 0) {
-			setInterval(this.processNext.bind(this), this.config.ttl);
+		if (this.ttl > 0) {
+			setInterval(this.processNext.bind(this), this.ttl);
 		}
 	}
 
@@ -57,7 +56,7 @@ class ParticipantQueue {
 
 			this.inProcess.onProcessing && this.inProcess.onProcessing({
 				participant: this.inProcess.participant,
-				ttl: this.config.ttl
+				ttl: this.ttl
 			});
 		}
 

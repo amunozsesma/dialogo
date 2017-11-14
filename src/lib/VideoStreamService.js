@@ -20,6 +20,11 @@ class VideoStreamService extends Emitr {
 		this.trigger('roomInfo', roomInfo)
 	}
 
+	updateConversationInfo(conversationInfo) {
+		console.log(`received conversation info with ttl ${conversationInfo.discussionTTL}`);
+		this.trigger('conversationInfo', conversationInfo);
+	}
+
 	startConversation(side) {
 		this.trigger('startconversation', side);
 	}

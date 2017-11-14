@@ -1,6 +1,7 @@
 const Emitter = require('events');
 const ParticipantFactory = require('./ParticipantFactory');
 const ParticipantQueue = require('./ParticipantQueue');
+const Conversation = require('./Conversation');
 
 class AppRoom extends Emitter {
 	constructor(name) {
@@ -10,17 +11,23 @@ class AppRoom extends Emitter {
 		this.participantFactory = new ParticipantFactory();
 
 		this.participants = {};
-		this.queueConfig = {
-			ttl: 20000
-		};
+
+		const config = {
+			waitForParticipants: true,
+			ttl: 20000,
+			queueCapacity: 20,
+			turnTtl: 10000
+		}
+
 		this.sideQueues = {
-			left: new ParticipantQueue(this.queueConfig),
-			right: new ParticipantQueue(this.queueConfig)
+			left: new ParticipantQueue(config),
+			right: new ParticipantQueue(config)
 		};
 
-		this.sideQueues['left'].start();
-		this.sideQueues['right'].start();
-
+		this.conversation = new Conversation(config);
+		this.conversation.on('conversation-started',
+			conversationState => this.spread(participant => participant.conversationInfo(conversationState))
+		);
 	}
 
 	join(client) {
@@ -28,23 +35,21 @@ class AppRoom extends Emitter {
 		this.participants[client.id] = participant;
 
 		this.sendRemoteIDsToClient(client);
+		participant.conversationInfo(this.conversation.getSnapshot());
 		return participant;
 	}
 
 	addMe(participant, side) {
 		this.sideQueues[side].add(participant, {
 			onProcessing: function(opts) {
-				Object.keys(this.participants).forEach(
-					id => this.participants[id].streamInfo(side, opts.ttl)
-				);
-
-				participant.startConversation(side);
+				this.conversation.addPariticipant(side, participant);
 			}.bind(this),
 			onFinished: function() {
-				//TODO this is a workaround till can figure out why ontrackremoved is not working
-				Object.keys(this.participants).forEach(
-					id => this.participants[id].stopConversation(side)
-				);
+				//TODO this is a workaround till can figure out why ontrackremoved is not working 
+				// should be done in the conversation
+				this.conversation.removeParticipant(this.whichSide(participant));
+				this.spread(participant => participant.stopConversation(side));
+
 			}.bind(this),
 			onError: function() {
 
@@ -75,6 +80,7 @@ class AppRoom extends Emitter {
 		const participant = this.participants[client.id];
 
 		if (participant) {
+			this.conversation.removeParticipant(this.whichSide(participant));
 			participant.leave();
 			this.removeFromQueues(participant);
 			delete this.participants[client.id];
@@ -86,10 +92,12 @@ class AppRoom extends Emitter {
 		this.sideQueues['right'].remove(participant);
 	}
 
+	spread(spreadFunc) {
+		Object.keys(this.participants).forEach(key => spreadFunc(this.participants[key]));
+	}
+
 	spreadRemoteIDInfo() {
-		Object.keys(this.participants).forEach(
-			key => this.sendRemoteIDsToClient(this.participants[key].client)
-		);
+		this.spread(participant => this.sendRemoteIDsToClient(participant.client));
 	}
 
 	whichSide(participant) {
@@ -102,14 +110,6 @@ class AppRoom extends Emitter {
 		return null;
 	}
 
-	spreadTurnInfo(side, isTalking) {
-		this.sideQueues[side].getAllParticipants().forEach(
-			participant => participant.turnInfo(side, isTalking)
-		);
-		this.sideQueues[oppositeSide(side)].getAllParticipants().forEach(
-			participant => participant.turnInfo(oppositeSide(side), !isTalking)
-		);
-	}
 }
 
 function oppositeSide(side) {
