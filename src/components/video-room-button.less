@@ -2,12 +2,13 @@
 
 .video-room-button-container {
     position: relative;
+    font-size: @label;
 }
 
 .video-room-button {
     background: @gradiant-green;
     color: white;
-    width: 120px;
+    width: @button;
     height: 40px;
     text-align: center;
     display: flex;
@@ -52,7 +53,7 @@
 }
 
 .video-room-button-info {
-    width: 120px;
+    width: @button;
     text-align: center;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -69,7 +70,7 @@
 
     &-splitter {
         border-bottom: 1px solid black;
-        width: 100px;
+        width: @button-splitter;
         margin: 5px 0 5px 10px;
     }
 }

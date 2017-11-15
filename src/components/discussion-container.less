@@ -9,6 +9,7 @@
 	flex-direction: column;
 	align-items: center;
 	position: relative;
+	font-size: @label;
 
 	&-spliter {
 		position: absolute;
@@ -19,7 +20,7 @@
 	&-ttl {
 		bottom: -100px;
 		position: absolute;
-		width: 250px;
+		width: @room-info;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -39,7 +40,7 @@
 
 	&-users {
 		position: absolute;
-		width: 200px;
+		width: @room-info;
 		background-color: white;
 		border: 1px solid black;
 		top: 10px;
