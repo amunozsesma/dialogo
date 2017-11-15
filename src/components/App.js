@@ -12,7 +12,7 @@ export default class App extends Component {
 
 		this.state = {
 			shared: {
-				connectedUsers: 1,
+				connectedUsers: 0,
 				roomTTL: 0
 			},
 			left: this.createSide('left'),

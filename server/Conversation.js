@@ -22,11 +22,12 @@ class Conversation extends Emitter {
 			}
 		};
 
-		this.state = this.createState();
+		this.state = null;
+		this.initState();
 	}
 
-	createState(conversationStart) {
-		let state = {
+	initState(conversationStart) {
+		this.state = {
 			discussionTTL: 0,
 			left: {
 				isTalking: false,
@@ -42,13 +43,12 @@ class Conversation extends Emitter {
 		
 		if (conversationStart) {
 			const side = ['left', 'right'][Math.floor(Math.random()) + 1];
-			state[side].isTalking = true;
+			this.state[side].isTalking = true;
 
-			state['discussionTTL'] = this.config.ttl;
-			state['left'].TTL = Math.floor(this.config.ttl / 2);
-			state['right'].TTL = Math.floor(this.config.ttl / 2);
+			this.state['discussionTTL'] = this.config.ttl;
+			this.state['left'].TTL = Math.floor(this.config.ttl / 2);
+			this.state['right'].TTL = Math.floor(this.config.ttl / 2);
 		}
-		return state;
 	}
 
 	addPariticipant(side, participant) {
@@ -63,16 +63,20 @@ class Conversation extends Emitter {
 		if (side) {
 			this.resetSide(side);
 		}
-
+		if (!this.participants['left'] && !this.participants['left']) {
+			clearInterval(this.intervalIds['discussionTTL']);
+		}
+		this.emit('conversation-changed', this.getSnapshot());
+		this.initState();
 	}
 
 	startConversation() {
-		this.state = this.createState(true);
+		this.initState(true);
 		this.createCounter(null, 'discussionTTL');
 
 		this.participants['left'] && this.participants['left'].startConversation('left');
 		this.participants['right'] && this.participants['right'].startConversation('right');
-		this.emit('conversation-started', this.getSnapshot());
+		this.emit('conversation-changed', this.getSnapshot());
 	}
 
 	getSnapshot() {

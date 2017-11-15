@@ -17,16 +17,24 @@
 	}
 
 	&-ttl {
-		bottom: 0;
+		bottom: -100px;
 		position: absolute;
 		width: 250px;
 		display: flex;
 		flex-direction: column;
-		padding: 10px;
-		color: white;
-		background-color: black;
-		border-radius: 10px;
 		align-items: center;
+
+		.discussion-countdown-timer,
+		&-label {
+			background-color: black;
+			color: white;
+			padding: 10px 20px;
+			border-radius: 10px;
+		}
+
+		.discussion-countdown-timer {
+			margin: 10px 0 -10px 0;
+		}
 	}
 
 	&-users {

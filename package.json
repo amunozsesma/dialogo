@@ -50,6 +50,7 @@
     "classnames": "^2.2.5",
     "express": "^4.13.4",
     "getconfig": "2.1.0",
+    "jquery-circliful": "^0.1.1",
     "mediasoup": "^1.2.5",
     "node-uuid": "1.2.0",
     "prop-types": "^15.6.0",

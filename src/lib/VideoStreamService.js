@@ -17,7 +17,13 @@ class VideoStreamService extends Emitr {
 			);
 		}
 
-		this.trigger('roomInfo', roomInfo)
+		let info = {};
+		Object.keys(roomInfo).forEach(key => {
+			if (key !== 'streams') {
+				info[key] = roomInfo[key];
+			}
+		});
+		this.trigger('roomInfo', info)
 	}
 
 	updateConversationInfo(conversationInfo) {

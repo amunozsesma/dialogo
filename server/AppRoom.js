@@ -12,20 +12,20 @@ class AppRoom extends Emitter {
 
 		this.participants = {};
 
-		const config = {
-			waitForParticipants: true,
+		this.config = {
+			waitForParticipants: false,
 			ttl: 20000,
 			queueCapacity: 20,
 			turnTtl: 10000
 		}
 
 		this.sideQueues = {
-			left: new ParticipantQueue(config),
-			right: new ParticipantQueue(config)
+			left: new ParticipantQueue(this.config),
+			right: new ParticipantQueue(this.config)
 		};
 
-		this.conversation = new Conversation(config);
-		this.conversation.on('conversation-started',
+		this.conversation = new Conversation(this.config);
+		this.conversation.on('conversation-changed',
 			conversationState => this.spread(participant => participant.conversationInfo(conversationState))
 		);
 	}
@@ -35,6 +35,7 @@ class AppRoom extends Emitter {
 		this.participants[client.id] = participant;
 
 		this.sendRemoteIDsToClient(client);
+		this.spread(participant => this.sendRoomInfoToClient(participant.client));
 		participant.conversationInfo(this.conversation.getSnapshot());
 		return participant;
 	}
@@ -62,6 +63,13 @@ class AppRoom extends Emitter {
 		client.emit('room-info', {streams: streams});
 	}
 
+	sendRoomInfoToClient(client) {
+		client.emit('room-info', {
+			connectedUsers: Object.keys(this.participants).length,
+			roomTTL: this.config.ttl
+		});
+	}
+
 	getSideRemoteID(side) {
 		const participant = this.sideQueues[side].getCurrentParticipant();
 		if (participant) {
@@ -73,7 +81,6 @@ class AppRoom extends Emitter {
 		} else {
 			return [];
 		}
-
 	}
 
 	leave(client) {
@@ -85,6 +92,8 @@ class AppRoom extends Emitter {
 			this.removeFromQueues(participant);
 			delete this.participants[client.id];
 		}
+
+		this.spread(participant => this.sendRoomInfoToClient(participant.client));
 	}
 
 	removeFromQueues(participant) {
