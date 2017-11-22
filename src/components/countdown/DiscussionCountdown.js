@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Countdown from './Countdown';
 import getVideoStreamService from '../../lib/VideoStreamService';
-import circliful from 'jquery-circliful';
-import $ from 'jquery';
+import { getProgress } from './CountdownUtils';
+import { Circle } from 'progressbar.js';
 
 import './discussion-countdown.less'
 
@@ -10,40 +10,42 @@ export default class DiscussionCountdown extends Component {
 	constructor() {
 		super();
 		this.countdown = new Countdown();
-		this.state = {ttl: 0};
+		this.state = {ttl: '00:00'};
+
+		this.circleProgresBar = null;
 	}
 
 	componentDidMount() {
 		getVideoStreamService().on('conversationInfo',
-			info => this.countdown.startTimer(
-				info.discussionTTL,
-				this.props.showHours,
-				ttl => this.setState({ttl: ttl}))
+			info => {
+				this.animateVisualComponent(info.discussionTTL);
+				this.countdown.startTimer(
+					info.discussionTTL,
+					this.props.showHours,
+					ttl => this.setState({ttl: ttl})
+				);
+			}
 		);
-		this.redrawTimer();
+
+		this.drawVisualComponent();
+
 	}
 
-	componentDidUpdate() {
-		this.redrawTimer();
+	animateVisualComponent(discussionTTL) {
+		const percent = getProgress(discussionTTL, this.props.roomTTL);
+		if (percent !== 1) {
+			const initialProgress = (discussionTTL === 0) ? 0 : 1 - percent;
+			this.circleProgresBar.set(initialProgress);
+		}
+
+		this.circleProgresBar.animate(percent, {duration: discussionTTL});
 	}
 
-	redrawTimer() {
-		const percent = getPercent(toMilis(this.state.ttl), this.props.roomTTL);
-		const foregroundColor = (percent === 0 || percent === 100) ? 'green' : 'white';
-		const backgroundColor = (percent >= 75 ) ? 'red' : 'green';
-
-		$(this.refs.visual).empty().removeData().circliful({
-			animation: 0,
-			foregroundBorderWidth: 80,
-			backgroundBorderWidth: 80,
-			foregroundColor: foregroundColor,
-			backgroundColor: backgroundColor,
-			fillColor: 'white',
-			percent: percent,
-			textStyle: 'font-size: 18px;',
-			textColor: '#666',
-			multiPercentage: 1,
-			replacePercentageByText: ''
+	drawVisualComponent() {
+		this.circleProgresBar = new Circle(this.refs.visual, {
+			color: 'white',
+			strokeWidth: 50,
+			trailColor: 'green'
 		});
 	}
 
@@ -55,24 +57,4 @@ export default class DiscussionCountdown extends Component {
 			</div>
 		);
 	}
-}
-
-function getPercent(elapsedTTL, totalTTL) {
-	return (totalTTL) ? 100 - parseInt((parseFloat(elapsedTTL, 10) / parseFloat(totalTTL, 10)) * 100, 10) : 0;
-}
-
-function toMilis(ttl) {
-	let secs = 0
-
-	if (ttl !== 0) {
-		const parts = ttl.split(':').map(part => parseInt(part, 10));
-
-		if (parts.length === 2) {
-			secs = parts[0] * 60 + parts[1];
-		} else {
-			secs = parts[0] * 3600 + parts[1] * 60 + parts[0];
-		}
-	}
-
-	return secs * 1000;
 }

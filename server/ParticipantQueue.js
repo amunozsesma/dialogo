@@ -85,7 +85,8 @@ class ParticipantQueue {
 	}
 
 	isParticipantInQueue(participant) {
-		return this.queue.some(element => element.participant === participant);
+		return (this.inProcess && this.inProcess.participant === participant)
+			|| this.queue.some(element => element.participant === participant);
 	}
 
 	getAllParticipants() {

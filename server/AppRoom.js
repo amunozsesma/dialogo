@@ -13,7 +13,7 @@ class AppRoom extends Emitter {
 		this.participants = {};
 
 		this.config = {
-			waitForParticipants: false,
+			waitForParticipants: true,
 			ttl: 20000,
 			queueCapacity: 20,
 			turnTtl: 10000

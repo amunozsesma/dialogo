@@ -65,6 +65,7 @@ class Conversation extends Emitter {
 		}
 		if (!this.participants['left'] && !this.participants['left']) {
 			clearInterval(this.intervalIds['discussionTTL']);
+			this.state['discussionTTL'] = 0;
 		}
 		this.emit('conversation-changed', this.getSnapshot());
 		this.initState();

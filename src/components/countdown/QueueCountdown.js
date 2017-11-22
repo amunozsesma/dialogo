@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import Countdown from './Countdown';
 import getVideoStreamService from '../../lib/VideoStreamService';
 
-import './discussion-countdown.less'
-
 export default class QueueCountdown extends Component {
 	constructor() {
 		super();

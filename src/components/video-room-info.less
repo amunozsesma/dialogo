@@ -1,49 +1,19 @@
 @import "common-styles";
 
-.info-container {
+.room-info {
 	display: flex;
-	padding: 5px 0 15px;
-}
+	flex: 1;
+	flex-direction: row;
 
-.info-traffic-light {
-	display: flex;	
-	flex: 0 15%;
-	//position: relative;
-
-	&-active, &-inactive {
-		//position: absolute;
-		//border: 1px solid @dark-grey;
-		//border-radius: 50%;
-		//width: 25px;
-		//height: 25px;
-		//top: -3px;
-		//background-color: @dark-grey;
+	&-mic {
+		width: 5vw;
+		height: 5vw;
+		margin: 1vw 1.5vw;
 	}
 
-	&-inactive {
-	    //left: 15px;
-	}
+	&-turn {
+		&-button {
 
-	&-active {
-		//left: 50px;
-	}
-}
-
-.info-time-left {
-	display: flex;	
-	flex: 0 55%;
-}
-
-.info-online {
-	display: flex;	
-	flex: 0 30%;
-}
-
-.info-time-left, .info-online {
-	.info-timer {
-		padding-left: 5px;
-	}
-
-	.info-label {
+		}
 	}
 }
