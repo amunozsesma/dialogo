@@ -16,7 +16,7 @@ class AppRoom extends Emitter {
 			waitForParticipants: true,
 			ttl: 20000,
 			queueCapacity: 20,
-			turnTtl: 10000
+			turnTTL: 10000
 		}
 
 		this.sideQueues = {
@@ -25,8 +25,13 @@ class AppRoom extends Emitter {
 		};
 
 		this.conversation = new Conversation(this.config);
+
 		this.conversation.on('conversation-changed',
 			conversationState => this.spread(participant => participant.conversationInfo(conversationState))
+		);
+
+		this.conversation.on('turn-changed',
+			conversationState => this.spread(participant => participant.turnInfo(conversationState))
 		);
 	}
 
@@ -37,6 +42,7 @@ class AppRoom extends Emitter {
 		this.sendRemoteIDsToClient(client);
 		this.spread(participant => this.sendRoomInfoToClient(participant.client));
 		participant.conversationInfo(this.conversation.getSnapshot());
+		participant.turnInfo(this.conversation.getSnapshot());
 		return participant;
 	}
 

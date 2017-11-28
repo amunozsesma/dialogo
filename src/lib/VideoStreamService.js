@@ -27,8 +27,11 @@ class VideoStreamService extends Emitr {
 	}
 
 	updateConversationInfo(conversationInfo) {
-		console.log(`received conversation info with ttl ${conversationInfo.discussionTTL}`);
 		this.trigger('conversationInfo', conversationInfo);
+	}
+
+	updateTurnInfo(turnInfo) {
+		this.trigger('turnInfo', turnInfo);
 	}
 
 	startConversation(side) {
@@ -68,8 +71,8 @@ class VideoStreamService extends Emitr {
 		this.trigger('remoteStreamInfo', side, ttl);
 	}
 
-	audioStreamChanged(side, isAudioEnabled) {
-		this.trigger('audioStreamChanged', side, isAudioEnabled);
+	turnChange(side) {
+		this.trigger('turnChange', side);
 	}
 }
 

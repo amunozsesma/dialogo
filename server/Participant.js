@@ -63,6 +63,13 @@ class Participant extends Emitter {
 		});
 	}
 
+	turnInfo(info) {
+		this.client.emit('server-conversation-message', {
+			type: 'turnInfo',
+			payload: info
+		});
+	}
+
 	leave() {
 		//TODO maybe send remove localstream
 	};

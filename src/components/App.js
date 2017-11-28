@@ -73,6 +73,11 @@ export default class App extends Component {
 			info => this.modifySharedState(info)
 		);
 
+		getVideoStreamService().on('turnInfo', info => {
+			this.modifyStateForSide('left', {isTalking: info['left'].isTalking});
+			this.modifyStateForSide('right', {isTalking: info['right'].isTalking});
+		});
+
 	}
 
 	onButtonClicked(side) {
@@ -112,9 +117,7 @@ export default class App extends Component {
 			},
 			onButtonClicked: buttonClicked,
 			positionInQueue: -1,
-			isTalking: false,
-			TTL: 0,
-			turnTTL: 0
+			isTalking: false
 		}
 	}
 

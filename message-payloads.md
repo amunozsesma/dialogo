@@ -65,7 +65,7 @@ SIGNALING - CONVERSATION
 ```
 client-conversation-message, 
 {
-	type: conversationEnd,
+	type: turnChanged,
 	payload: {
 		side: <side>
 	}
@@ -84,11 +84,20 @@ server-conversation-message,
 ```
 
 ```
-server-conversation-message, --> sent to all clients, when connecting and when client turnInfo is received (spreads the client info) 
+server-conversation-message, --> sent to all clients, when connecting and when client turnInfo is received (spreads the client info). If received and stream is local, mute or unmute. 
+Flow is client:left -> turnChanged:left -> server -> conversationInfo:left.isTalking:false -> client:left.mute
 {
 	type: conversationInfo,
 	payload: {
 		discussionTTL: <ttl left in discussion>,
+	}
+}
+```
+```
+server-conversation-message
+{
+type: turnInfo,
+	payload: {
 		left: {
 			isTalking: <Boolean>,
 			TTL: <ttl left in left conversation>,

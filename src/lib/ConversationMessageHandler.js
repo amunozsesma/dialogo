@@ -7,12 +7,19 @@ export default class ConversationMessageHandler {
 
 	init() {
 		this.connection.on('server-conversation-message', this.processMessage.bind(this));
+
+		getVideoStreamService().on('turnChange', side =>
+			this.connection.emit('turnChanged', {side: side})
+		);
 	}
 
 	processMessage(message) {
 		switch(message.type) {
 			case 'conversationInfo':
 				this.onConversationInfo(message.payload);
+				break;
+			case 'turnInfo':
+				this.onTurnInfo(message.payload);
 				break;
 			default:
 				console.log(`Message type not implemented ${message.type}`);
@@ -22,5 +29,9 @@ export default class ConversationMessageHandler {
 
 	onConversationInfo(payload) {
 		getVideoStreamService().updateConversationInfo(payload);
+	}
+
+	onTurnInfo(payload) {
+		getVideoStreamService().updateTurnInfo(payload);
 	}
 }

@@ -43,11 +43,11 @@ class Conversation extends Emitter {
 		
 		if (conversationStart) {
 			const side = ['left', 'right'][Math.floor(Math.random()) + 1];
-			this.state[side].isTalking = true;
 
 			this.state['discussionTTL'] = this.config.ttl;
-			this.state['left'].TTL = Math.floor(this.config.ttl / 2);
-			this.state['right'].TTL = Math.floor(this.config.ttl / 2);
+			this.state['left'].TTL = this.config.turnTTL;
+			this.state['right'].TTL = this.config.turnTTL;
+			this.startTurnCounter(side);
 		}
 	}
 
@@ -68,12 +68,13 @@ class Conversation extends Emitter {
 			this.state['discussionTTL'] = 0;
 		}
 		this.emit('conversation-changed', this.getSnapshot());
+		this.emit('turn-changed', this.getSnapshot());
 		this.initState();
 	}
 
 	startConversation() {
 		this.initState(true);
-		this.createCounter(null, 'discussionTTL');
+		this.startDiscussionCounter();
 
 		this.participants['left'] && this.participants['left'].startConversation('left');
 		this.participants['right'] && this.participants['right'].startConversation('right');
@@ -84,14 +85,26 @@ class Conversation extends Emitter {
 		return JSON.parse(JSON.stringify(this.state));
 	}
 
-	createCounter(side, field) {
-		if (side) {
-			clearInterval(this.intervalIds[side][field]);
-			this.intervalIds[side][field] = setInterval(() => this.state[side][field] -= 1000, 1000);
-		} else {
-			clearInterval(this.intervalIds[field]);
-			this.intervalIds[field] = setInterval(() => this.state[field] -= 1000, 1000);
-		}
+	startDiscussionCounter() {
+		clearInterval(this.intervalIds['discussionTTL']);
+		this.intervalIds['discussionTTL'] = setInterval(() => this.state['discussionTTL'] -= 1000, 1000);
+	}
+
+	startTurnCounter(side) {
+		this.state[side].isTalking = true;
+		this.emit('turn-changed', this.getSnapshot());
+
+		this.intervalIds[side]['TTL'] = setInterval(() => {
+			this.state[side].TTL -= 1000;
+			if (this.state[side].TTL <= 0) {
+				this.state[side].TTL = this.config.turnTTL;
+				clearInterval(this.intervalIds[side]['TTL']);
+				this.state[side].isTalking = false;
+				this.startTurnCounter(opositeSide(side));
+			}
+		}, 1000);
+
+
 	}
 
 	resetSide(side) {
@@ -100,9 +113,12 @@ class Conversation extends Emitter {
 		this.state[side].TTL = 0;
 		this.state[side].turnTTL = 0;
 		clearInterval(this.intervalIds[side]['TTL']);
-		clearInterval(this.intervalIds[side]['turnTTL']);
 	}
 
+}
+
+function opositeSide(side) {
+	return side === 'left' ? 'right' : 'left';
 }
 
 module.exports = Conversation;

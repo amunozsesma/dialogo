@@ -4,14 +4,24 @@
 	display: flex;
 	flex: 1;
 	flex-direction: row;
+	height: 8vw;
+
+	.right & {
+		flex-direction: row-reverse;
+	}
 
 	&-mic {
-		width: 5vw;
-		height: 5vw;
-		margin: 1vw 1.5vw;
+		flex-basis: 30%;
+		border: 1px solid red;
+
+		&.talking {
+			border-color: green;
+		}
 	}
 
 	&-turn {
+		flex-basis: 70%;
+
 		&-button {
 
 		}
