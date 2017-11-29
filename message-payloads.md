@@ -22,7 +22,8 @@ room-info,
 		}
 	],
 	connectedUsers: <numberOfUsers>,
-	roomTTL: <time unaltered for each conversation configured for this room>
+	roomTTL: <time unaltered for each conversation configured for this room>,
+	turnTTL: <time unaltered for each conversation configured for this room>
 
 ```
 
@@ -100,13 +101,11 @@ type: turnInfo,
 	payload: {
 		left: {
 			isTalking: <Boolean>,
-			TTL: <ttl left in left conversation>,
-			turnTTL: <0 | ttl left in current turn if it is talking> 
+			TTL: <ttl left in left conversation>
 		},
 		right: {
 			isTalking: <Boolean>,
-			TTL: <ttl left in right conversation>,
-			turnTTL: <0 || ttl left in current turn if it is talking>
+			TTL: <ttl left in right conversation>
 		}
 	}
 }

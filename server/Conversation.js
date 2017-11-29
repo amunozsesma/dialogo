@@ -13,12 +13,10 @@ class Conversation extends Emitter {
 		this.intervalIds = {
 			discussionTTL: null,
 			left: {
-				TTL: null,
-				turnTTL: null
+				TTL: null
 			},
 			right: {
-				TTL: null,
-				turnTTL: null
+				TTL: null
 			}
 		};
 
@@ -31,13 +29,11 @@ class Conversation extends Emitter {
 			discussionTTL: 0,
 			left: {
 				isTalking: false,
-				TTL: 0,
-				turnTTL: 0
+				TTL: 0
 			},
 			right: {
 				isTalking: false,
-				TTL: 0,
-				turnTTL: 0
+				TTL: 0
 			}
 		};
 		
@@ -111,7 +107,6 @@ class Conversation extends Emitter {
 		this.participants[side] = null;
 		this.state[side].isTalking = false;
 		this.state[side].TTL = 0;
-		this.state[side].turnTTL = 0;
 		clearInterval(this.intervalIds[side]['TTL']);
 	}
 

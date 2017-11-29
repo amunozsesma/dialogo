@@ -72,7 +72,8 @@ class AppRoom extends Emitter {
 	sendRoomInfoToClient(client) {
 		client.emit('room-info', {
 			connectedUsers: Object.keys(this.participants).length,
-			roomTTL: this.config.ttl
+			roomTTL: this.config.ttl,
+			turnTTL: this.config.turnTTL
 		});
 	}
 

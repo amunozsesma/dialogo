@@ -13,7 +13,8 @@ export default class App extends Component {
 		this.state = {
 			shared: {
 				connectedUsers: 0,
-				roomTTL: 0
+				roomTTL: 0,
+				turnTTL: 0
 			},
 			left: this.createSide('left'),
 			right: this.createSide('right')

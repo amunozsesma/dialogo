@@ -17,7 +17,7 @@ export default class VideoRoomInfo extends Component {
 			<div className="room-info">
 				<div className={micClassName}></div>
 				<div className="room-info-turn">
-					<TurnCountdown />
+					<TurnCountdown turnTTL={this.props.shared.turnTTL} side={this.props.data.side}/>
 					<div className="room-info-turn-button"></div>
 				</div>
 			</div>
