@@ -44,7 +44,12 @@ export default class DiscussionCountdown extends Component {
 		this.circleProgresBar = new Circle(this.refs.visual, {
 			color: 'white',
 			strokeWidth: 50,
-			trailColor: 'green'
+			svgStyle: {
+				display: 'block',
+				width: '100%',
+				background: 'radial-gradient(circle at center, #85e085 15%, #33cc33 45%)',
+				'border-radius': '50%'
+			}
 		});
 	}
 
