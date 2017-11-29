@@ -64,6 +64,10 @@ class AppRoom extends Emitter {
 		});
 	}
 
+	changeTurn(side) {
+		this.conversation.changeTurn(side);
+	}
+
 	sendRemoteIDsToClient(client) {
 		const streams = [].concat(this.getSideRemoteID('left'), this.getSideRemoteID('right'));
 		client.emit('room-info', {streams: streams});

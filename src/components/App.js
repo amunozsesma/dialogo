@@ -33,8 +33,7 @@ export default class App extends Component {
 					positionInQueue: position
 				});
 
-				const oppositeSide = (side === 'left') ? 'right' : 'left';
-				this.modifyStateForSide(oppositeSide, {
+				this.modifyStateForSide(oppositeSide(side), {
 					roomState: Constants.ROOM_STATE_DISABLED,
 					positionInQueue: position
 				});
@@ -45,11 +44,11 @@ export default class App extends Component {
 		getVideoStreamService().on('addVideoStream',
 			(side, stream, isLocal) => {
 				if (isLocal) {
-					this.modifyStateForSide('left', {
+					this.modifyStateForSide(side, {
 						roomState: Constants.ROOM_STATE_TALKING
 					});
-					this.modifyStateForSide('right', {
-						roomState: Constants.ROOM_STATE_TALKING
+					this.modifyStateForSide(oppositeSide(side), {
+						roomState: Constants.ROOM_STATE_CONVERSATION
 					});
 				}
 			}
@@ -131,4 +130,8 @@ export default class App extends Component {
 		);
 	}
 
+}
+
+function oppositeSide(side) {
+	return (side === 'left') ? 'right' : 'left';
 }

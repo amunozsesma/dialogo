@@ -8,8 +8,13 @@ Labels['App_Terms_Content'] = 'Lorem ipsum dolor sit amet, consectetur adipiscin
 Labels['Button'] = {};
 Labels['Button'][Constants.ROOM_STATE_QUEUING] = 'Espera tu Turno';
 Labels['Button'][Constants.ROOM_STATE_TALKING] = 'Dialoga';
+Labels['Button'][Constants.ROOM_STATE_CONVERSATION] = 'Dialoga';
 Labels['Button'][Constants.ROOM_STATE_DISABLED] = 'Esperando...';
 Labels['Button'][Constants.ROOM_STATE_INITIAL] = 'Entrar en Cola';
+
+Labels['TurnButton'] = {};
+Labels['TurnButton']['Talking'] = 'Pasa turno';
+Labels['TurnButton']['NotTalking'] = 'Espera tu turno';
 
 Labels['Info_Time_Left'] = 'Tiempo de palabra:';
 Labels['Info_Online'] = 'En Línea:';

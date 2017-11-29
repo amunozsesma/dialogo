@@ -3,6 +3,7 @@ import Constants from './Constants';
 import Labels from './Labels';
 import classNames from 'classnames';
 import Countdown from './Countdown';
+import Button from './Button';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 import './video-room-button.less'
@@ -16,7 +17,7 @@ export default class VideoRoomButton extends Component {
 		const roomState = this.props.data.roomState;
 		const buttonClassNames = classNames('video-room-button', {
 			queuing: roomState === Constants.ROOM_STATE_QUEUING,
-			talking: roomState === Constants.ROOM_STATE_TALKING,
+			talking: roomState === Constants.ROOM_STATE_TALKING || roomState === Constants.ROOM_STATE_CONVERSATION,
 			disabled: roomState === Constants.ROOM_STATE_DISABLED
 		});
 		const buttonLabel = Labels['Button'][this.props.data.roomState];
@@ -26,9 +27,7 @@ export default class VideoRoomButton extends Component {
 
 		return (
 			<div className='video-room-button-container'>
-				<div className={buttonClassNames} onClick={this.onButtonClicked.bind(this)}>
-					{buttonLabel}
-				</div>
+				<Button className={buttonClassNames} onClick={() => this.onButtonClicked()} label={buttonLabel}/>
 				<CSSTransitionGroup transitionName="video-room-transition" transitionEnterTimeout={500} transitionLeaveTimeout={100}>
 					{transitionElements.map(
 						element => {

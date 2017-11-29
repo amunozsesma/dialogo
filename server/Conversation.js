@@ -57,6 +57,7 @@ class Conversation extends Emitter {
 
 	removeParticipant(side) {
 		if (side) {
+			this.participants[side] = null;
 			this.resetSide(side);
 		}
 		if (!this.participants['left'] && !this.participants['left']) {
@@ -75,6 +76,11 @@ class Conversation extends Emitter {
 		this.participants['left'] && this.participants['left'].startConversation('left');
 		this.participants['right'] && this.participants['right'].startConversation('right');
 		this.emit('conversation-changed', this.getSnapshot());
+	}
+
+	changeTurn(side) {
+		this.resetSide(side);
+		this.startTurnCounter(side);
 	}
 
 	getSnapshot() {
@@ -104,10 +110,9 @@ class Conversation extends Emitter {
 	}
 
 	resetSide(side) {
-		this.participants[side] = null;
 		this.state[side].isTalking = false;
-		this.state[side].TTL = 0;
 		clearInterval(this.intervalIds[side]['TTL']);
+		this.state[side].TTL = 0;
 	}
 
 }

@@ -6,16 +6,17 @@ class Participant extends Emitter {
 
 		this.room = room;
 		this.client = client;
-		this.client.on('client-queue-message', this.processQueueMessage.bind(this))
+		this.client.on('client-queue-message', this.processMessage.bind(this));
+		this.client.on('client-conversation-message', this.processMessage.bind(this));
 	}
 
-	processQueueMessage(message) {
+	processMessage(message) {
 		switch(message.type) {
 			case 'addMeToQueue':
 				this.onAddMeToQueue(message.payload);
 				break;
-			case 'turnInfo':
-				this.onTurnInfo(message.payload);
+			case 'turnChanged':
+				this.onTurnChanged(message.payload);
 				break;
 			default:
 				//TODO add loggin
@@ -27,8 +28,8 @@ class Participant extends Emitter {
 		this.room.addMe(this, side);
 	}
 
-	onTurnInfo(payload) {
-		this.room.spreadTurnInfo(payload.side, payload.isTalking);
+	onTurnChanged(side) {
+		this.room.changeTurn(side);
 	}
 
 	startConversation(side) {

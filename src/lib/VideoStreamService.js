@@ -31,6 +31,7 @@ class VideoStreamService extends Emitr {
 	}
 
 	updateTurnInfo(turnInfo) {
+		console.log('turnInfo received');
 		this.trigger('turnInfo', turnInfo);
 	}
 

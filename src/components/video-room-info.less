@@ -26,8 +26,15 @@
 		justify-content: center;
 		padding: 20px;
 
-		&-button {
+		&-button.button {
+			align-self: center;
+			background: @gradiant-grey;
+			cursor: default;
 
+			&.on-turn:hover {
+				background: @gradiant-grey-hover;
+				cursor: pointer;
+			}
 		}
 	}
 }

@@ -9,7 +9,10 @@ export default class ConversationMessageHandler {
 		this.connection.on('server-conversation-message', this.processMessage.bind(this));
 
 		getVideoStreamService().on('turnChange', side =>
-			this.connection.emit('turnChanged', {side: side})
+			this.connection.emit('client-conversation-message', {
+				type: 'turnChanged',
+				payload: side
+			})
 		);
 	}
 
