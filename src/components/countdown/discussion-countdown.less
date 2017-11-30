@@ -3,4 +3,13 @@
 	display: flex;
 	width: 4vw;
 	margin: auto;
+	position: relative;
+
+	&:before {
+		content: url('../styles/clock.svg');
+		position: absolute;
+		width: 100%;
+		top: -23%;
+	}
 }
+

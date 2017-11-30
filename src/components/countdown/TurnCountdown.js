@@ -45,7 +45,7 @@ export default class TurnCountdown extends Component {
 				width: '100%',
 				border: '1px solid',
 				'border-radius': '10px',
-				background: 'linear-gradient(180deg, #33cc33 15%, #85e085 45%)'
+				background: 'linear-gradient(270deg, #3AAA35 15%, #95C11F 45%)'
 			}
 		});
 

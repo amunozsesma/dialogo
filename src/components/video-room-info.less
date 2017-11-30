@@ -11,11 +11,12 @@
 	}
 
 	&-mic {
+	    margin: 5%;
 		flex-basis: 30%;
-		border: 1px solid red;
+		background: url('./styles/micOff.svg') no-repeat;
 
 		&.talking {
-			border-color: green;
+			background: url('./styles/micOn.svg') no-repeat;
 		}
 	}
 
@@ -30,10 +31,15 @@
 			align-self: center;
 			background: @gradiant-grey;
 			cursor: default;
+			color: #F39200;
 
-			&.on-turn:hover {
-				background: @gradiant-grey-hover;
-				cursor: pointer;
+			&.on-turn {
+				color: #E6332A;
+
+				&:hover {
+					background: @gradiant-grey-hover;
+					cursor: pointer;
+				}
 			}
 		}
 	}

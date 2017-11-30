@@ -20,17 +20,9 @@ export default class VideoRoomInfo extends Component {
 			'talking': this.props.data.isTalking
 		});
 
-		const showButton = this.props.data.roomState === Constants.ROOM_STATE_TALKING
-			|| this.props.data.roomState === Constants.ROOM_STATE_TALKING;
-		const buttonClassName = classNames('room-info-turn-button', {
-			'on-turn': isMySideTalking(this.props)
-		});
-		const buttonLabel = this.props.data.isTalking
-			? Labels['TurnButton']['Talking']
-			: Labels['TurnButton']['NotTalking'];
-		const button = (showButton)
-		// const button = (true)
-			? <Button className={buttonClassName} onClick={() => this.onButtonClicked()} label={buttonLabel}/>
+		const buttonProperties = getButtonProperties(this.props);
+		const button = (buttonProperties.show)
+			? <Button className={buttonProperties.className} onClick={() => this.onButtonClicked()} label={buttonProperties.label}/>
 			: null;
 
 		return (
@@ -45,6 +37,35 @@ export default class VideoRoomInfo extends Component {
 	}
 }
 
+function getButtonProperties(props, _test, _isTalking) {
+	const buttonClassName = classNames('room-info-turn-button', {
+		'on-turn': isMySideTalking(props)
+	});
+	const buttonLabel = props.data.isTalking
+			? Labels['TurnButton']['Talking']
+			: Labels['TurnButton']['NotTalking'];
+	const showButton = props.data.roomState === Constants.ROOM_STATE_TALKING
+		|| props.data.roomState === Constants.ROOM_STATE_TALKING;
+
+	return (!_test)
+	? {
+		className: buttonClassName,
+		label: buttonLabel,
+		show: showButton
+	}
+	: {
+		className: _isTalking ? 'room-info-turn-button on-turn' : 'room-info-turn-button',
+		label: _isTalking ? Labels['TurnButton']['Talking'] : Labels['TurnButton']['NotTalking'],
+		show: true
+	}
+}
+
 function isMySideTalking(props) {
 	return props.data.isTalking && props.data.roomState === Constants.ROOM_STATE_TALKING;
+}
+
+function forTest(isTalking) {
+	if (isTalking) {
+
+	}
 }

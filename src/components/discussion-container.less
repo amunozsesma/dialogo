@@ -2,6 +2,7 @@
 
 .discussion-container {
 	display: flex;
+	max-height: 720px;
 }
 
 .discusion-middle-info {
@@ -13,12 +14,13 @@
 
 	&-spliter {
 		position: absolute;
-	    height: 120%;
-	    border: 1px solid black;
+		max-height: 75%;
+		border: 1px solid black;
+		height: 100%;
 	}
 
 	&-ttl {
-		bottom: -100px;
+		bottom: 0;
 		position: absolute;
 		width: @room-info;
 		display: flex;

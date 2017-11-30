@@ -126,6 +126,7 @@ export default class App extends Component {
 			<div className="app-container">
 				<div className="app-title">Diálogo a la fuerza</div>
 				<DiscussionContainer data={this.state}/>
+				<div className="app-footer"></div>
 			</div>
 		);
 	}

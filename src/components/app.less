@@ -3,12 +3,13 @@
 .app-title {
 	font-size: @h1;
     text-align: center;
-    padding-top: 2%;
     color: @title-color;
 }
 
 .app-container {
-	height: 100%;
+	min-width: 1200px;
+	max-height: 1080px;
+	overflow: hidden;
 }
 
 .app-info {
@@ -34,4 +35,9 @@
 
 .app-terms-content {
 	padding-top: 10px;
+}
+
+.app-footer {
+	height: 1080px;
+	background: url(./styles/footer.svg) no-repeat;
 }
