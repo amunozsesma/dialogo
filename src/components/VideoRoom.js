@@ -4,6 +4,7 @@ import VideoRoomButton from './VideoRoomButton';
 import VideoRoomInfo from './VideoRoomInfo';
 import getVideoStreamService from '../lib/VideoStreamService';
 import classNames from 'classnames';
+import Constants from './Constants';
 import './video-room.less'
 
 export default class VideoRoom extends Component {
@@ -14,21 +15,17 @@ export default class VideoRoom extends Component {
 		this.onRemoveVideoStream = this.removeVideoStream.bind(this);
 		this.onAudioStreamChanged = this.audioStreamChanged.bind(this);
 
-		this.videoStreamAdapter = getVideoStreamService();
-
 		this.videoEl = null;
 	}
 
 	componentDidMount() {
-		this.videoStreamAdapter.on('addVideoStream', this.onAddVideoStream);
-		this.videoStreamAdapter.on('removeVideoStream', this.onRemoveVideoStream);
-		this.videoStreamAdapter.on('audioStreamChanged', this.onAudioStreamChanged);
+		getVideoStreamService().on('addVideoStream', this.onAddVideoStream);
+		getVideoStreamService().on('removeVideoStream', this.onRemoveVideoStream);
 	}
 
 	componentWillUnmount() {
-		this.videoStreamAdapter.off('addVideoStream', this.onAddVideoStream);
-		this.videoStreamAdapter.off('removeVideoStream', this.onRemoveVideoStream);
-		this.videoStreamAdapter.off('audioStreamChanged', this.onAudioStreamChanged);
+		getVideoStreamService().off('addVideoStream', this.onAddVideoStream);
+		getVideoStreamService().off('removeVideoStream', this.onRemoveVideoStream);
 	}
 
 	addVideoStream(side, stream, isLocal) {
@@ -72,24 +69,14 @@ export default class VideoRoom extends Component {
 		}
 	}
 
-	//TODO provisional to chekck turn swapping
-	// onButtonClicked() {
-	// 	//Send turn info with and mute
-	// 	if (this.isVideoLocal) {
-	// 		this.videoEl.srcObject.getAudioTracks().forEach(
-	// 			audioTrack => audioTrack.enabled = false
-	// 		);
+	componentWillUpdate(nextProps) {
+		if (this.isVideoLocal && this.props.data.roomState === Constants.ROOM_STATE_TALKING) {
+			this.videoEl.srcObject.getAudioTracks().forEach(
+				audioTrack => audioTrack.enabled = nextProps.data.isTalking
+			);
+		}
+	}
 
-	// 		getVideoStreamService().audioStreamChanged(this.props.data.side, false);
-	// 	}
-	// }
-
-				// <VideoRoomInfo data={this.props.data} />
-				// <div className="video-room-footer">
-				// 	<VideoRoomButton data={this.props.data}/>
-				// 	<button type="button" onClick={this.onButtonClicked.bind(this)}>turn</button>
-				// </div>
-				// <div>{'Position: ' + this.props.data.positionInQueue}</div>
 	render() {
 		const containerClassName = 'video-room-container ' + this.props.data.side;
 
