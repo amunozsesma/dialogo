@@ -35,6 +35,10 @@ module.exports = {
           loader: 'babel-loader'
         }],
         include: path.join(__dirname, 'src')
+      },
+      {
+        test: /\.(ttf|eot|svg|woff2|woff)(\?[\s\S]+)?$/,
+        use: 'file-loader'
       }
     ]
   }
