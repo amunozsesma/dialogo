@@ -1,15 +1,20 @@
-.discussion-countdown-visual {
-	align-items: center;
-	display: flex;
-	width: 4vw;
-	margin: auto;
-	position: relative;
+.discussion-countdown {
+	&-timer {
+		text-align: center;
+	}
 
-	&:before {
-		content: url('../styles/clock.svg');
-		position: absolute;
-		width: 100%;
-		top: -23%;
+	&-visual {
+		align-items: center;
+		display: flex;
+		width: 6vw;
+		margin: auto;
+		position: relative;
+
+		&:before {
+			content: url('../styles/clock.svg');
+			position: absolute;
+			width: 100%;
+			top: -23%;
+		}
 	}
 }
-
